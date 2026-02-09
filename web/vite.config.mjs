@@ -7,6 +7,8 @@ import jsconfigPaths from 'vite-jsconfig-paths';
 // ----------------------------------------------------------------------
 
 export default defineConfig({
+  base: './',
+  // 不使用自定义 outDir，Docker 内用默认 dist 再 mv 为 build，避免 build-html 解析失败
   plugins: [react(), jsconfigPaths()],
   // https://github.com/jpuri/react-draft-wysiwyg/issues/1317
   //   define: {
