@@ -1,8 +1,12 @@
 # 基于 docker-compose.yml.bak 模板，使用 MySQL，应用本地构建
 # version 已废弃，Compose 会自动识别，已移除以避免警告
 
+# 开发调试：仅启动依赖时执行 docker-compose up -d（不带 --profile app）
+# 完整启动（含应用）时执行 docker-compose --profile app up -d
 services:
   one-hub:
+    profiles:
+      - app
     build:
       context: .
       dockerfile: Dockerfile
@@ -36,6 +40,8 @@ services:
     image: redis:latest
     container_name: one-hub-redis
     restart: always
+    ports:
+      - "6379:6379"
 
   db:
     image: mysql:8.2.0

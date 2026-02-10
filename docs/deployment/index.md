@@ -7,6 +7,10 @@ lastUpdated: true
 
 # 部署说明
 
+::: tip 使用本仓库时
+若你从本仓库克隆并希望按「开发 / 生产」步骤操作（含 `run.sh`、Docker Compose 完整栈），请先阅读 **[开发与生产步骤](/dev/development-and-production)**。
+:::
+
 ## 配置说明
 
 系统支持两种配置方式：
