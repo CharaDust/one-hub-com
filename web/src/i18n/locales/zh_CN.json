@@ -400,12 +400,12 @@
     "content": {
       "channel_group": "分组: {{ channel_group }}",
       "group_discount": "分组折扣: {{ discount }}",
-      "input_price": "输入: ${{ price }} /M",
-      "output_price": "输出: ${{ price }} /M",
-      "times_price": "${{ times }} / 次",
-      "original_input_price": "原输入价格: ${{ price }} /M",
-      "original_output_price": "原输出价格: ${{ price }} /M",
-      "original_times_price": "原价格: ${{ times }} / 次",
+      "input_price": "输入: Credit {{ price }} /M",
+      "output_price": "输出: Credit {{ price }} /M",
+      "times_price": "Credit {{ times }} / 次",
+      "original_input_price": "原输入价格: Credit {{ price }} /M",
+      "original_output_price": "原输出价格: Credit {{ price }} /M",
+      "original_times_price": "原价格: Credit {{ times }} / 次",
       "calculate_steps": "计算步骤: ",
       "calculate_steps_tip": "PS：本系统按照积分计算，所有金额均为积分换算而来，1积分=$0.000002，最低消费为1积分，本计算步骤仅供参考，以实际扣费为准",
       "free": "免费",
@@ -559,7 +559,7 @@
     "uUserRole": "未知身份",
     "setReliable": "设为可信内部员工",
     "changeQuota": "增减额度",
-    "changeQuotaHelperText": "这里是增减，不是直接更改用户余额，输入美元，你最多可以减扣 {{quota}}",
+    "changeQuotaHelperText": "这里是增减，不是直接更改用户余额，输入积分，你最多可以减扣 {{quota}}",
     "changeQuotaNotEmpty": "请填写变更额度",
     "changeQuotaNotEnough": "不能扣除超过用户余额的额度",
     "quotaRemark": "备注"
@@ -626,7 +626,7 @@
   },
   "pricingPage": {
     "title": "模型价格",
-    "currencyInfo1": "美元",
+    "currencyInfo1": "积分",
     "currencyInfo2": "：1 === $0.002 / 1K tokens",
     "currencyInfo3": "人民币",
     "currencyInfo4": "： 1 === ￥0.014 / 1k tokens",
@@ -866,16 +866,16 @@
       },
       "paymentSettings": {
         "title": "支付设置",
-        "alert": "支付设置： <br />1. 美元汇率：用于计算充值金额的美元金额 <br />2. 最低充值金额（美元）：最低充值金额，单位为美元，填写整数 <br />3. 页面都以美元为单位计算，实际用户支付的货币，按照支付网关设置的货币进行转换 <br />例如： A 网关设置货币为 CNY，用户支付 100 美元，那么实际支付金额为 100 * 美元汇率 <br />B 网关设置货币为 USD，用户支付 100 美元，那么实际支付金额为 100 美元",
+        "alert": "支付设置： <br />1. 积分汇率：用于计算充值金额的积分金额 <br />2. 最低充值金额（积分）：最低充值金额，单位为积分，填写整数 <br />3. 页面都以积分为单位计算，实际用户支付的货币，按照支付网关设置的货币进行转换 <br />例如： A 网关设置货币为 CNY，用户支付 100 积分，那么实际支付金额为 100 * 积分汇率 <br />B 网关设置货币为 USD，用户支付 100 积分，那么实际支付金额为 100 积分",
         "usdRate": {
-          "label": "美元汇率",
+          "label": "积分汇率",
           "placeholder": "例如：7.3"
         },
         "minAmount": {
-          "label": "最低充值金额（美元）",
-          "placeholder": "例如：1，那么最低充值金额为1美元，请填写整数"
+          "label": "最低充值金额（积分）",
+          "placeholder": "例如：1，那么最低充值金额为1积分，请填写整数"
         },
-        "discountInfo": "固定金额充值折扣设置示例： <br />为一个 JSON文本，键为充值金额，值为折扣，比如 &#123;&quot;10&quot;:0.9&#125; 表示充值10美元按照9折计算 <br />计算公式：实际费用=（原始价值*折扣+原始价值*折扣*手续费率）*汇率",
+        "discountInfo": "固定金额充值折扣设置示例： <br />为一个 JSON文本，键为充值金额，值为折扣，比如 &#123;&quot;10&quot;:0.9&#125; 表示充值10积分按照9折计算 <br />计算公式：实际费用=（原始价值*折扣+原始价值*折扣*手续费率）*汇率",
         "discount": {
           "label": "固定金额充值折扣",
           "placeholder": "为一个 JSON 文本，键为充值金额，值为折扣"
@@ -1293,7 +1293,7 @@
     "paymentType": "支付类型",
     "notifyDomain": "回调域名",
     "notifyDomainTip": "支付回调的域名，除非你自行配置过，否则保持为空",
-    "FixedTip": "每次支付收取固定的手续费，单位 美元",
+    "FixedTip": "每次支付收取固定的手续费，单位 积分",
     "percentTip": "每次支付按百分比收取手续费，如果为5%，请填写 0.05",
     "currencyType": "网关货币类型",
     "currencyTip": "该网关是收取什么货币的，请查询对应网关文档"

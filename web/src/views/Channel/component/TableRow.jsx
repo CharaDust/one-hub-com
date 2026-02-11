@@ -1461,6 +1461,6 @@ function renderBalance(type, balance) {
     case 45: // Deepseek
       return <>¥{balance}</>;
     default:
-      return <>${balance.toFixed(2)}</>;
+      return <>{'Credit ' + balance.toFixed(2)}</>;
   }
 }

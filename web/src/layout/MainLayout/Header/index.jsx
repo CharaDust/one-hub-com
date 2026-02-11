@@ -11,7 +11,7 @@ import { Box, IconButton, Stack } from '@mui/material';
 import LogoSection from '../LogoSection';
 import Profile from './Profile';
 import ThemeButton from 'ui-component/ThemeButton';
-import I18nButton from 'ui-component/i18nButton';
+// import I18nButton from 'ui-component/i18nButton'; // 语言切换暂不展示
 import { NoticeButton } from 'ui-component/notice';
 
 // assets
@@ -78,7 +78,7 @@ const Header = ({ handleLeftDrawerToggle, toggleProfileDrawer }) => {
       <Stack direction="row" spacing={1} alignItems="center">
         <NoticeButton />
         <ThemeButton />
-        <I18nButton />
+        {/* 语言切换按钮暂不展示 <I18nButton /> */}
         {isConsoleRoute && <Profile toggleProfileDrawer={toggleProfileDrawer} />}
       </Stack>
     </>

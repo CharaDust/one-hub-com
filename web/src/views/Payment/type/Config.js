@@ -7,7 +7,7 @@ const PaymentType = {
 
 const CurrencyType = {
   CNY: '人民币',
-  USD: '美元'
+  USD: '积分'
 };
 
 const PaymentConfig = {

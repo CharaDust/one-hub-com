@@ -263,7 +263,7 @@ export default function UsersTableRow({ item, manageUser, handleOpenModal, setMo
               value={money}
               onChange={(e) => setMoney(e.target.value)}
               InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                startAdornment: <InputAdornment position="start">Credit</InputAdornment>,
                 endAdornment: <InputAdornment position="end">{renderQuotaByMoney(money)}</InputAdornment>
               }}
               helperText={t('userPage.changeQuotaHelperText', { quota: renderQuota(item.quota, 6) })}

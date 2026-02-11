@@ -60,7 +60,7 @@ func (c *Dashboard) HandleRequest(ctx context.Context, req *protocol.CallToolReq
 	result := fmt.Sprintf("%s-%s账单\n", query.StartOfDay, query.EndOfDay)
 	for _, m := range dashboards {
 		quotaCost := float64(m.Quota) * 0.002 / 1000
-		result += fmt.Sprintf("Date:%v RequestCount:%d RequestTime(ms):%d Quota($):%.6f ModelName:%s InputToken:%d OutputToken:%d \n", m.Date, m.RequestCount, m.RequestTime, quotaCost, m.ModelName, m.PromptTokens, m.CompletionTokens)
+		result += fmt.Sprintf("Date:%v RequestCount:%d RequestTime(ms):%d Quota(Credit):%.6f ModelName:%s InputToken:%d OutputToken:%d \n", m.Date, m.RequestCount, m.RequestTime, quotaCost, m.ModelName, m.PromptTokens, m.CompletionTokens)
 	}
 	// 返回查询结果
 	return &protocol.CallToolResult{

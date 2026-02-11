@@ -187,7 +187,7 @@ const MenuCard = () => {
               sx={{ fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: 0.5, mr: 'auto' }}
             >
               <Icon icon="solar:wallet-money-linear" width={12} />
-              {t('sidebar.remainingBalance')}: ${balance}
+              {t('sidebar.remainingBalance')}: {'Credit ' + balance}
             </Typography>
             <Tooltip title={t('dashboard_index.calls')}>
               <Typography
@@ -224,7 +224,7 @@ const MenuCard = () => {
                 mt: 0.5
               }}
             >
-              {`$${usedQuota} (${Math.round(progressValue)}%)`}
+              {`Credit ${usedQuota} (${Math.round(progressValue)}%)`}
             </Typography>
           </Box>
         </Box>

@@ -447,12 +447,12 @@
       "calculate_steps_tip": "PS：本系統按照積分計算，所有金額均為積分換算而來，1積分=$0.000002，最低消費為1積分，本計算步驟僅供參考，以實際扣費為準。",
       "channel_group": "分組: {{ channel_group }}",
       "group_discount": "分組折扣: {{ discount }}",
-      "input_price": "輸入: ${{ price }} /M",
-      "original_input_price": "原輸入價格: ${{ price }} /M",
-      "original_output_price": "原輸出價格: ${{ price }} /M",
-      "original_times_price": "原價格: ${{ times }} / 次",
-      "output_price": "輸出: ${{ price }} /M",
-      "times_price": "${{ times }} / 次",
+      "input_price": "輸入: Credit {{ price }} /M",
+      "original_input_price": "原輸入價格: Credit {{ price }} /M",
+      "original_output_price": "原輸出價格: Credit {{ price }} /M",
+      "original_times_price": "原價格: Credit {{ times }} / 次",
+      "output_price": "輸出: Credit {{ price }} /M",
+      "times_price": "Credit {{ times }} / 次",
       "free": "免費",
       "old_log": "舊版log",
       "illustrate": "* 本筆記錄為系統升級前所記錄的log"
@@ -658,7 +658,7 @@
     "orderList": "訂單列表"
   },
   "payment_edit": {
-    "FixedTip": "每次支付收取固定的手續費，單位 美元",
+    "FixedTip": "每次支付收取固定的手續費，單位 积分",
     "addOk": "創建成功！",
     "currencyTip": "該網關是收取什麼貨幣的，請查詢對應網關文檔",
     "currencyType": "網關貨幣類型",
@@ -681,7 +681,7 @@
   "pricing": "模型價格",
   "pricingPage": {
     "ModelCount": "模型數量",
-    "currencyInfo1": "美元",
+    "currencyInfo1": "积分",
     "currencyInfo2": "：1 === $0.002 / 1K tokens",
     "currencyInfo3": "港元",
     "currencyInfo4": "：1 === HK$0.014 / 1k tokens",
@@ -924,20 +924,20 @@
         "geminiAPIEnabled": "是否開啟Gemini API"
       },
       "paymentSettings": {
-        "alert": "支付設置： <br />1. 美元匯率：用於計算充值金額的美元金額 <br />2. 最低充值金額（美元）：最低充值金額，單位為美元，填寫整數 <br />3. 頁面都以美元為單位計算，實際用戶支付的貨幣，按照支付網關設置的貨幣進行轉換 <br />例如： A 網關設置貨幣為 CNY，用戶支付 100 美元，那麼實際支付金額為 100 * 美元匯率 <br />B 網關設置貨幣為 USD，用戶支付 100 美元，那麼實際支付金額為 100 美元",
+        "alert": "支付設置： <br />1. 积分匯率：用於計算充值金額的积分金額 <br />2. 最低充值金額（积分）：最低充值金額，單位為积分，填寫整數 <br />3. 頁面都以积分為單位計算，實際用戶支付的貨幣，按照支付網關設置的貨幣進行轉換 <br />例如： A 網關設置貨幣為 CNY，用戶支付 100 积分，那麼實際支付金額為 100 * 积分匯率 <br />B 網關設置貨幣為 USD，用戶支付 100 积分，那麼實際支付金額為 100 积分",
         "discount": {
           "label": "固定金額充值折扣",
           "placeholder": "為一個 JSON 文本，鍵為充值金額，值為折扣"
         },
-        "discountInfo": "固定金額充值折扣設置示例： <br />為一個 JSON 文本，鍵為充值金額，值為折扣，比如 &#123;&quot;10&quot;:0.9&#125; 表示充值10美元按照9折計算 <br />計算公式：實際費用=（原始價值*折扣+原始價值*折扣*手續費率）*匯率",
+        "discountInfo": "固定金額充值折扣設置示例： <br />為一個 JSON 文本，鍵為充值金額，值為折扣，比如 &#123;&quot;10&quot;:0.9&#125; 表示充值10积分按照9折計算 <br />計算公式：實際費用=（原始價值*折扣+原始價值*折扣*手續費率）*匯率",
         "minAmount": {
-          "label": "最低充值金額（美元）",
-          "placeholder": "例如：1，那麼最低充值金額為1美元，請填寫整數"
+          "label": "最低充值金額（积分）",
+          "placeholder": "例如：1，那麼最低充值金額為1积分，請填寫整數"
         },
         "save": "保存支付設置",
         "title": "支付設置",
         "usdRate": {
-          "label": "美元匯率",
+          "label": "积分匯率",
           "placeholder": "例如：7.3"
         }
       },
@@ -1380,7 +1380,7 @@
     "usernameRequired": "用戶名不能為空",
     "users": "用戶",
     "changeQuota": "增減額度",
-    "changeQuotaHelperText": "呢度係增減，唔係直接更改用戶餘額，輸入美元，你最多可以扣除 {{quota}}",
+    "changeQuotaHelperText": "呢度係增減，唔係直接更改用戶餘額，輸入积分，你最多可以扣除 {{quota}}",
     "changeQuotaNotEmpty": "請填寫更改額度",
     "changeQuotaNotEnough": "唔可以扣除超過用戶餘額嘅金額",
     "quotaRemark": "備註"

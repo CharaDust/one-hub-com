@@ -32,6 +32,12 @@ export function calculatePrice(ratio, groupDiscount, isTimes) {
   return priceString;
 }
 
+// 将后端返回的 $ 价格字符串统一显示为 Credit
+function formatPriceDisplay(str) {
+  if (str == null || typeof str !== 'string') return str;
+  return str.replace(/^\$/, 'Credit ');
+}
+
 // QuotaWithDetailContent is responsible for rendering the detailed content
 export default function QuotaWithDetailContent({ item, userGroup, totalInputTokens, totalOutputTokens }) {
   console.log(item);
@@ -43,24 +49,34 @@ export default function QuotaWithDetailContent({ item, userGroup, totalInputToke
   const priceType = item.metadata?.price_type || 'tokens';
   const extraBilling = item?.metadata?.extra_billing || {};
 
-  // Get input/output prices from metadata with appropriate defaults
+  // Get input/output prices from metadata with appropriate defaults（后端可能返回含 $ 的字符串，统一显示为 Credit）
+  const rawOriginalInput = item.metadata?.input_price_origin;
+  const rawOriginalOutput = item.metadata?.output_price_origin;
+  const rawInputPrice = item.metadata?.input_price;
+  const rawOutputPrice = item.metadata?.output_price;
+
   const originalInputPrice =
-    item.metadata?.input_price_origin ||
-    (item.metadata?.input_ratio ? `$${calculatePrice(item.metadata.input_ratio, 1, false)} /M` : '$0 /M');
+    rawOriginalInput != null
+      ? formatPriceDisplay(rawOriginalInput)
+      : (item.metadata?.input_ratio ? `Credit ${calculatePrice(item.metadata.input_ratio, 1, false)} /M` : 'Credit 0 /M');
   const originalOutputPrice =
-    item.metadata?.output_price_origin ||
-    (item.metadata?.output_ratio ? `$${calculatePrice(item.metadata.output_ratio, 1, false)} /M` : '$0 /M');
+    rawOriginalOutput != null
+      ? formatPriceDisplay(rawOriginalOutput)
+      : (item.metadata?.output_ratio ? `Credit ${calculatePrice(item.metadata.output_ratio, 1, false)} /M` : 'Credit 0 /M');
 
   // Calculate actual prices based on ratios and group discount
   const groupRatio = item.metadata?.group_ratio || 1;
   const inputPrice =
-    item.metadata?.input_price || (item.metadata?.input_ratio ? `$${calculatePrice(item.metadata.input_ratio, groupRatio, false)} ` : '$0');
+    rawInputPrice != null
+      ? formatPriceDisplay(rawInputPrice)
+      : (item.metadata?.input_ratio ? `Credit ${calculatePrice(item.metadata.input_ratio, groupRatio, false)} ` : 'Credit 0');
   const outputPrice =
-    item.metadata?.output_price ||
-    (item.metadata?.output_ratio ? `$${calculatePrice(item.metadata.output_ratio, groupRatio, false)}` : '$0');
+    rawOutputPrice != null
+      ? formatPriceDisplay(rawOutputPrice)
+      : (item.metadata?.output_ratio ? `Credit ${calculatePrice(item.metadata.output_ratio, groupRatio, false)}` : 'Credit 0');
 
-  const inputPriceUnit = inputPrice + ' /M';
-  const outputPriceUnit = outputPrice + ' /M';
+  const inputPriceUnit = /\/M|次/.test(inputPrice) ? inputPrice : inputPrice + ' /M';
+  const outputPriceUnit = /\/M|次/.test(outputPrice) ? outputPrice : outputPrice + ' /M';
 
   let calculateSteps = '';
   if (priceType === 'tokens') {
@@ -77,9 +93,9 @@ export default function QuotaWithDetailContent({ item, userGroup, totalInputToke
   if (extraBilling && Object.keys(extraBilling).length > 0) {
     Object.entries(extraBilling).forEach(([key, data]) => {
       if (data.type !== '') {
-        extraBillingSteps.push(`${key}[${data.type}] : $${data.price} x ${data.call_count}`);
+        extraBillingSteps.push(`${key}[${data.type}] : Credit ${data.price} x ${data.call_count}`);
       } else {
-        extraBillingSteps.push(`${key} : $${data.price} x ${data.call_count}`);
+        extraBillingSteps.push(`${key} : Credit ${data.price} x ${data.call_count}`);
       }
     });
   }

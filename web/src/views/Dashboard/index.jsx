@@ -292,8 +292,8 @@ function getBarDataGroup(data) {
     }
   }
 
-  let chartData = generateBarChartOptions(lastSevenDays, result, 'USD', 3);
-  chartData.options.title.text = 'Total：$' + renderChartNumber(totalCosts, 3);
+  let chartData = generateBarChartOptions(lastSevenDays, result, '积分', 3);
+  chartData.options.title.text = 'Total：Credit ' + renderChartNumber(totalCosts, 3);
 
   return chartData;
 }
@@ -335,9 +335,9 @@ function getLineCardOption(lineDataGroup, field) {
       todayValue = parseFloat(todayValue);
       break;
     case 'Quota':
-      // chartData = generateLineChartOptions(lineData, '美元');
+      // chartData = generateLineChartOptions(lineData, '积分');
       lastDayValue = parseFloat(lastDayValue);
-      todayValue = '$' + parseFloat(todayValue);
+      todayValue = 'Credit ' + parseFloat(todayValue);
       break;
     case 'PromptTokens':
       // chartData = generateLineChartOptions(lineData, '');

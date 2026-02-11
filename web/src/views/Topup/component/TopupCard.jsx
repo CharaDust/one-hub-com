@@ -263,7 +263,7 @@ const TopupCard = () => {
                 </Typography>
               </Grid>
               <Grid item xs={6} md={3}>
-                ${Number(amount)}
+                {'Credit ' + Number(amount)}
               </Grid>
               {discountTotal !== amount && (
                 <>
@@ -273,7 +273,7 @@ const TopupCard = () => {
                     </Typography>
                   </Grid>
                   <Grid item xs={6} md={3}>
-                    ${discountTotal}
+                    {'Credit ' + discountTotal}
                   </Grid>
                 </>
               )}
@@ -291,7 +291,7 @@ const TopupCard = () => {
                     </Typography>
                   </Grid>
                   <Grid item xs={6} md={3}>
-                    ${calculateFee()}
+                    {'Credit ' + calculateFee()}
                   </Grid>
                 </>
               )}
