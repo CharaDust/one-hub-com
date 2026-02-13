@@ -161,7 +161,7 @@ func PaymentCallback(c *gin.Context) {
 		logger.SysError(fmt.Sprintf("gateway callback failed to update order, trade_no: %s,", payNotify.TradeNo))
 		return
 	}
-
+	// 添加余额到用户账户
 	err = model.IncreaseUserQuota(order.UserId, order.Quota)
 	if err != nil {
 		logger.SysError(fmt.Sprintf("gateway callback failed to increase user quota, trade_no: %s,", payNotify.TradeNo))

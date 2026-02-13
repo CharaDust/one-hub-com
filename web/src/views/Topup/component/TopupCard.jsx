@@ -7,11 +7,12 @@ import {
   InputLabel,
   FormControl,
   useMediaQuery,
-  TextField,
   Box,
   Grid,
   Divider,
-  Badge
+  Badge,
+  Select,
+  MenuItem
 } from '@mui/material';
 import { IconBuildingBank } from '@tabler/icons-react';
 import { useTheme } from '@mui/material/styles';
@@ -26,6 +27,16 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { showError, showInfo, showSuccess, renderQuota, trims } from 'utils/common';
 import { useTranslation } from 'react-i18next';
 
+// 充值金额预设：{ 金额: 显示名称 }
+const TOPUP_AMOUNT_OPTIONS = [
+  { value: 190, label: '特惠计划1' },
+  { value: 390, label: '特惠计划2' },
+  { value: 990, label: '特惠计划3' },
+  { value: 2000, label: '计划1' },
+  { value: 3000, label: '计划2' },
+  { value: 5000, label: '计划3' }
+];
+
 const TopupCard = () => {
   const { t } = useTranslation(); // Translation hook
   const theme = useTheme();
@@ -35,7 +46,7 @@ const TopupCard = () => {
 
   const [payment, setPayment] = useState([]);
   const [selectedPayment, setSelectedPayment] = useState(null);
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(TOPUP_AMOUNT_OPTIONS[0].value);
   const [discountTotal, setDiscountTotal] = useState(0);
   const [open, setOpen] = useState(false);
   const [disabledPay, setDisabledPay] = useState(false);
@@ -152,11 +163,7 @@ const TopupCard = () => {
   };
 
   const handleAmountChange = (event) => {
-    const value = event.target.value;
-    if (value === '') {
-      setAmount('');
-      return;
-    }
+    const value = Number(event.target.value);
     handleSetAmount(value);
   };
 
@@ -254,7 +261,22 @@ const TopupCard = () => {
                 </Grid>
               ))}
             </Grid>
-            <TextField label={t('topupCard.amount')} type="number" onChange={handleAmountChange} value={amount} />
+            <FormControl fullWidth>
+              <InputLabel id="topup-amount-label">{t('topupCard.amount')}</InputLabel>
+              <Select
+                labelId="topup-amount-label"
+                id="topup-amount-select"
+                value={amount}
+                label={t('topupCard.amount')}
+                onChange={handleAmountChange}
+              >
+                {TOPUP_AMOUNT_OPTIONS.map((opt) => (
+                  <MenuItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <Divider />
             <Grid container direction="row" justifyContent="flex-end" spacing={2}>
               <Grid item xs={6} md={9}>
