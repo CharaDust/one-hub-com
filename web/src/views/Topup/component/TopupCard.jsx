@@ -22,8 +22,9 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 import { useSelector } from 'react-redux';
 import PayDialog from './PayDialog';
 
+import { useSearchParams } from 'react-router-dom';
 import { API } from 'utils/api';
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { showError, showInfo, showSuccess, renderQuota, trims } from 'utils/common';
 import { useTranslation } from 'react-i18next';
 
@@ -37,9 +38,19 @@ const TOPUP_AMOUNT_OPTIONS = [
   { value: 5000, label: '计划3' }
 ];
 
+// 超级管理员可见的测试金额（仅 role === 100 时显示）
+const SUPER_ADMIN_TEST_OPTIONS = [
+  { value: 1, label: '[测试]特惠计划' },
+  { value: 2, label: '[测试]计划' }
+];
+
+const SUPER_ADMIN_ROLE = 100;
+
 const TopupCard = () => {
   const { t } = useTranslation(); // Translation hook
   const theme = useTheme();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlAmountRef = useRef(null); // 来自 URL 的金额，用于自动点击充值
   const [redemptionCode, setRedemptionCode] = useState('');
   const [userQuota, setUserQuota] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,6 +63,12 @@ const TopupCard = () => {
   const [disabledPay, setDisabledPay] = useState(false);
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const siteInfo = useSelector((state) => state.siteInfo);
+  const user = useSelector((state) => state.account?.user);
+  const isSuperAdmin = user?.role === SUPER_ADMIN_ROLE;
+  const amountOptions = useMemo(
+    () => (isSuperAdmin ? [...TOPUP_AMOUNT_OPTIONS, ...SUPER_ADMIN_TEST_OPTIONS] : TOPUP_AMOUNT_OPTIONS),
+    [isSuperAdmin]
+  );
   const RechargeDiscount = useMemo(() => {
     if (siteInfo.RechargeDiscount === '') {
       return {};
@@ -203,10 +220,33 @@ const TopupCard = () => {
     setDiscountTotal(amount * discount);
   };
 
+  // 初始化：拉取支付方式与余额
   useEffect(() => {
     getPayment().then();
     getUserQuota().then();
   }, []);
+
+  // 从 URL 读取 amount 参数并自动选中金额（供外部带参跳转）
+  useEffect(() => {
+    const amountParam = searchParams.get('amount');
+    if (!amountParam) return;
+    const num = Number(amountParam);
+    const valid = amountOptions.some((opt) => opt.value === num);
+    if (valid) {
+      handleSetAmount(num);
+      urlAmountRef.current = num;
+    }
+  }, [searchParams, amountOptions]);
+
+  // 当支付方式已加载且存在来自 URL 的金额时，自动打开充值弹窗并清除 URL 参数
+  useEffect(() => {
+    if (urlAmountRef.current == null || payment.length === 0 || !selectedPayment || amount !== urlAmountRef.current) {
+      return;
+    }
+    urlAmountRef.current = null;
+    setSearchParams({}, { replace: true }); // 清除 URL 中的 amount，避免刷新重复触发
+    handlePay();
+  }, [payment.length, selectedPayment, amount]);
 
   return (
     <UserCard>
@@ -270,7 +310,7 @@ const TopupCard = () => {
                 label={t('topupCard.amount')}
                 onChange={handleAmountChange}
               >
-                {TOPUP_AMOUNT_OPTIONS.map((opt) => (
+                {amountOptions.map((opt) => (
                   <MenuItem key={opt.value} value={opt.value}>
                     {opt.label}
                   </MenuItem>

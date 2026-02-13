@@ -47,11 +47,12 @@ const PayDialog = ({ open, onClose, amount, uuid }) => {
     setIntervalId(id);
   }, []);
 
-  function openPayUrl(method, url, params) {
+  function openPayUrl(method, url, params, openInNewTab = false) {
     const form = document.createElement('form');
     form.method = method;
     form.action = url;
-    form.target = '_blank';
+    // 当前窗口跳转避免被浏览器当作弹窗拦截（尤其从外链带参打开时无用户手势，新标签易被拦截）
+    form.target = openInNewTab ? '_blank' : '_self';
     for (const key in params) {
       const input = document.createElement('input');
       input.name = key;
@@ -87,12 +88,18 @@ const PayDialog = ({ open, onClose, amount, uuid }) => {
         setSubMessage(
           <>
             如果没有自动跳转，请点击
-            <a href="#" onClick={() => openPayUrl(data.method, data.url, data.params)}>
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                openPayUrl(data.method, data.url, data.params, true);
+              }}
+            >
               这里跳转
             </a>
           </>
         );
-        openPayUrl(data.method, data.url, data.params);
+        openPayUrl(data.method, data.url, data.params, false);
       } else if (type === 2) {
         setQrCodeUrl(data.url);
         setLoading(false);
