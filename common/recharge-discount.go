@@ -35,7 +35,8 @@ func UpdateRechargeDiscountByJSONString(jsonStr string) error {
 func GetRechargeDiscount(name string) float64 {
 	ratio, ok := RechargeDiscount[name]
 	if !ok {
-		logger.SysError("recharge discount not found: " + name)
+		// 未配置的档位按 1 倍折扣，仅打日志便于排查
+		logger.SysLog("recharge discount not configured: " + name + ", use 1")
 		return 1
 	}
 	return ratio

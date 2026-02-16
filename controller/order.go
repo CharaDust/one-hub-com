@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 	"sync"
+	"time"
 
 	"one-api/common"
 	"one-api/common/config"
@@ -127,6 +128,53 @@ func UnlockOrder(tradeNo string) {
 	}
 }
 
+// 新手档位（特惠计划）：1、190、390、990，对应到账 15、500、1000、2000；冷却期内再次充新手档位仅等额到账
+var newbieTierAmounts = map[int]bool{10: true, 190: true, 390: true, 990: true}
+
+func isNewbieTier(amount int) bool {
+	return newbieTierAmounts[amount]
+}
+
+func getNewbieTierCredit(amount int) int {
+	switch amount {
+	case 10:
+		return 15
+	case 190:
+		return 500
+	case 390:
+		return 1000
+	case 990:
+		return 2000
+	default:
+		return amount
+	}
+}
+
+// 固定档位（含加赠）：11→15，190、390、990、2000、3000、5000，以及测试档 10、20；检测到这些档位时按加赠规则到账
+var fixedRechargeAmounts = map[int]bool{
+	10: true, 11: true, 20: true, 190: true, 390: true, 990: true, 2000: true, 3000: true, 5000: true,
+}
+
+func isFixedRechargeAmount(amount int) bool {
+	return fixedRechargeAmounts[amount]
+}
+
+// getActualCredit 仅用于固定档位：2000→3000，3000→5000，5000→10000，其余固定档到账=充值金额
+func getActualCreditForFixedTier(amount int) int {
+	switch amount {
+	case 11:
+		return 15
+	case 2000:
+		return 3000
+	case 3000:
+		return 5000
+	case 5000:
+		return 10000
+	default:
+		return amount
+	}
+}
+
 func PaymentCallback(c *gin.Context) {
 	uuid := c.Param("uuid")
 	paymentService, err := payment.NewPaymentService(uuid)
@@ -148,11 +196,34 @@ func PaymentCallback(c *gin.Context) {
 		logger.SysError(fmt.Sprintf("gateway callback failed to find order, trade_no: %s,", payNotify.TradeNo))
 		return
 	}
-	fmt.Println(order.Status, order.Status != model.OrderStatusPending)
 
 	if order.Status != model.OrderStatusPending {
 		return
 	}
+
+	var actualCredit int
+	// 新手档位（1/190/390/990）：无新手标签时给特惠到账并加标签进入冷却；冷却期内再次充新手档位仅等额到账
+	if isNewbieTier(order.Amount) {
+		user, err := model.GetUserById(order.UserId, true)
+		if err != nil {
+			logger.SysError(fmt.Sprintf("gateway callback failed to get user, trade_no: %s, user_id: %d", payNotify.TradeNo, order.UserId))
+			return
+		}
+		if user.HasNewbieTag() {
+			actualCredit = order.Amount // 冷却期内等额发放
+		} else {
+			actualCredit = getNewbieTierCredit(order.Amount)
+			expireAt := time.Now().Add(time.Duration(config.NewbieTagCooldownMinutes) * time.Minute).Unix()
+			if err := model.SetNewbieTagExpireAt(order.UserId, expireAt); err != nil {
+				logger.SysError(fmt.Sprintf("gateway callback failed to set newbie tag, trade_no: %s, error: %s", payNotify.TradeNo, err.Error()))
+			}
+		}
+	} else if isFixedRechargeAmount(order.Amount) {
+		actualCredit = getActualCreditForFixedTier(order.Amount)
+	} else {
+		actualCredit = order.Amount
+	}
+	order.Quota = actualCredit * int(config.QuotaPerUnit)
 
 	order.GatewayNo = payNotify.GatewayNo
 	order.Status = model.OrderStatusSuccess
@@ -174,8 +245,13 @@ func PaymentCallback(c *gin.Context) {
 		logger.SysError(fmt.Sprintf("failed to check and upgrade user group, trade_no: %s, error: %s", payNotify.TradeNo, err.Error()))
 	}
 
-	model.RecordQuotaLog(order.UserId, model.LogTypeTopup, order.Quota, c.ClientIP(), fmt.Sprintf("在线充值成功，充值积分: %d，支付金额：%.2f %s", order.Quota, order.OrderAmount, order.OrderCurrency))
+	model.RecordQuotaLog(order.UserId, model.LogTypeTopup, order.Quota, c.ClientIP(), fmt.Sprintf("在线充值成功，充值档位: %d 积分，实际到账: %d 积分，支付金额：%.2f %s", order.Amount, actualCredit, order.OrderAmount, order.OrderCurrency))
 
+	// 浏览器通过 return_url 跳转过来的是 GET，处理完后重定向到流水页
+	if c.Request.Method == "GET" {
+		c.Redirect(http.StatusFound, "/panel/log")
+		return
+	}
 }
 
 func CheckOrderStatus(c *gin.Context) {

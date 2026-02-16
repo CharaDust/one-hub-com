@@ -70,7 +70,10 @@ func (e *Epay) HandleCallback(c *gin.Context, gatewayConfig string) (*types.PayN
 
 	paymentResult, success := epayConfig.Verify(queryMap)
 	if paymentResult != nil && success {
-		c.Writer.Write([]byte("success"))
+		// GET 为浏览器跳转，由 controller 统一 302 到 /panel/log，不在此写 body
+		if c.Request.Method != "GET" {
+			c.Writer.Write([]byte("success"))
+		}
 		payNotify := &types.PayNotify{
 			TradeNo:   paymentResult.OutTradeNo,
 			GatewayNo: paymentResult.TradeNo,

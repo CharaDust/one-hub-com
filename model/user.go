@@ -43,10 +43,11 @@ type User struct {
 	AffQuota         int            `json:"aff_quota" gorm:"type:int;default:0;column:aff_quota"`
 	AffHistoryQuota  int            `json:"aff_history_quota" gorm:"type:int;default:0;column:aff_history"`
 	InviterId        int            `json:"inviter_id" gorm:"type:int;column:inviter_id;index"`
-	LastLoginTime    int64          `json:"last_login_time" gorm:"bigint;default:0"`
-	LastLoginIp      string         `json:"last_login_ip" gorm:"type:varchar(128);default:''"`
-	CreatedTime      int64          `json:"created_time" gorm:"bigint"`
-	DeletedAt        gorm.DeletedAt `json:"-" gorm:"index"`
+	LastLoginTime     int64          `json:"last_login_time" gorm:"bigint;default:0"`
+	LastLoginIp       string         `json:"last_login_ip" gorm:"type:varchar(128);default:''"`
+	CreatedTime       int64          `json:"created_time" gorm:"bigint"`
+	NewbieTagExpireAt int64          `json:"newbie_tag_expire_at" gorm:"bigint;default:0"` // 新手标签过期时间（Unix 秒），0 表示无标签或已过期
+	DeletedAt         gorm.DeletedAt `json:"-" gorm:"index"`
 }
 
 type UserUpdates func(*User)
@@ -187,6 +188,16 @@ func (user *User) Update(updatePassword bool) error {
 
 func UpdateUser(id int, fields map[string]interface{}) error {
 	return DB.Model(&User{}).Where("id = ?", id).Updates(fields).Error
+}
+
+// HasNewbieTag 是否处于新手标签冷却期内（有“新手”标签）
+func (user *User) HasNewbieTag() bool {
+	return user.NewbieTagExpireAt > time.Now().Unix()
+}
+
+// SetNewbieTagExpireAt 设置新手标签过期时间（用于充值新手档位后进入冷却期）
+func SetNewbieTagExpireAt(userId int, expireAt int64) error {
+	return UpdateUser(userId, map[string]interface{}{"newbie_tag_expire_at": expireAt})
 }
 
 func (user *User) Delete() error {

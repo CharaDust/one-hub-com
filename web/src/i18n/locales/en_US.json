@@ -944,6 +944,10 @@
           "label": "Minimum Recharge Amount (USD)",
           "placeholder": "e.g., 1, then the minimum recharge amount is 1 USD, please enter an integer"
         },
+        "newbieCooldownMinutes": {
+          "label": "Newbie Plan Cooldown (minutes)",
+          "placeholder": "e.g., 5 for 5 minutes, 43200 for 30 days (30×24×60)"
+        },
         "save": "Save Payment Settings",
         "title": "Payment Settings",
         "usdRate": {
@@ -1318,7 +1322,11 @@
     "selectPaymentMethod": "Select payment method",
     "topup": "Top up",
     "topupAmount": "Top up amount",
-    "topupsuccess": "Top up successful!"
+    "topupsuccess": "Top up successful!",
+    "newbieCooldownConfirm": "You have already enjoyed the newbie offer recently. Recharging now will not give any bonus credits. Are you sure you want to continue?",
+    "newbieCooldownConfirmTitle": "Notice",
+    "newbieConfirmCancel": "Cancel",
+    "newbieConfirmContinue": "Continue"
   },
   "topupPage": {
     "alertMessage": "Please check the recharge records and invitation records in the logs. For recharge records, select the type [Recharge] in the log; for invitation records, select [System] in the log."

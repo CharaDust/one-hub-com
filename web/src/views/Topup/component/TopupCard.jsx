@@ -12,7 +12,12 @@ import {
   Divider,
   Badge,
   Select,
-  MenuItem
+  MenuItem,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions
 } from '@mui/material';
 import { IconBuildingBank } from '@tabler/icons-react';
 import { useTheme } from '@mui/material/styles';
@@ -40,11 +45,14 @@ const TOPUP_AMOUNT_OPTIONS = [
 
 // 超级管理员可见的测试金额（仅 role === 100 时显示）
 const SUPER_ADMIN_TEST_OPTIONS = [
-  { value: 1, label: '[测试]特惠计划' },
-  { value: 2, label: '[测试]计划' }
+  { value: 10, label: '[测试]特惠计划' },
+  { value: 11, label: '[测试]计划' }
 ];
 
 const SUPER_ADMIN_ROLE = 100;
+
+// 特惠计划档位（与后端 newbieTierAmounts 一致）：有新手标签时再充这些档位仅等额到账，需二次确认
+const NEWBIE_TIER_AMOUNTS = [10, 190, 390, 990];
 
 const TopupCard = () => {
   const { t } = useTranslation(); // Translation hook
@@ -61,10 +69,18 @@ const TopupCard = () => {
   const [discountTotal, setDiscountTotal] = useState(0);
   const [open, setOpen] = useState(false);
   const [disabledPay, setDisabledPay] = useState(false);
+  const [confirmNewbieOpen, setConfirmNewbieOpen] = useState(false);
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const siteInfo = useSelector((state) => state.siteInfo);
   const user = useSelector((state) => state.account?.user);
   const isSuperAdmin = user?.role === SUPER_ADMIN_ROLE;
+  // 是否处于新手标签冷却期内（有“新手”标签）：newbie_tag_expire_at 为 Unix 秒，大于当前时间即有效
+  const hasNewbieTag = useMemo(
+    () =>
+      user?.newbie_tag_expire_at != null &&
+      Number(user.newbie_tag_expire_at) > Math.floor(Date.now() / 1000),
+    [user?.newbie_tag_expire_at]
+  );
   const amountOptions = useMemo(
     () => (isSuperAdmin ? [...TOPUP_AMOUNT_OPTIONS, ...SUPER_ADMIN_TEST_OPTIONS] : TOPUP_AMOUNT_OPTIONS),
     [isSuperAdmin]
@@ -128,6 +144,18 @@ const TopupCard = () => {
       return;
     }
 
+    // 已有新手标签且选择特惠计划时，提示：强行充值将无奖励积分
+    if (hasNewbieTag && NEWBIE_TIER_AMOUNTS.includes(Number(amount))) {
+      setConfirmNewbieOpen(true);
+      return;
+    }
+
+    setDisabledPay(true);
+    setOpen(true);
+  };
+
+  const handleConfirmNewbieContinue = () => {
+    setConfirmNewbieOpen(false);
     setDisabledPay(true);
     setOpen(true);
   };
@@ -377,6 +405,18 @@ const TopupCard = () => {
             </Button>
           </Stack>
           <PayDialog open={open} onClose={onClosePayDialog} amount={amount} uuid={selectedPayment.uuid} />
+          <Dialog open={confirmNewbieOpen} onClose={() => setConfirmNewbieOpen(false)}>
+            <DialogTitle>{t('topupCard.newbieCooldownConfirmTitle')}</DialogTitle>
+            <DialogContent>
+              <DialogContentText>{t('topupCard.newbieCooldownConfirm')}</DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setConfirmNewbieOpen(false)}>{t('topupCard.newbieConfirmCancel')}</Button>
+              <Button variant="contained" onClick={handleConfirmNewbieContinue} color="primary">
+                {t('topupCard.newbieConfirmContinue')}
+              </Button>
+            </DialogActions>
+          </Dialog>
         </SubCard>
       )}
 

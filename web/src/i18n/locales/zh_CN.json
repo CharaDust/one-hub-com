@@ -467,7 +467,7 @@
     "amountMinLimit": "金额不能少于",
     "amountMaxLimit": "金额不能超过 1000000",
     "positiveIntegerAmount": "请输入正整数金额",
-    "topupAmount": "充值金额",
+    "topupAmount": "充值积分（不计算额外赠送）",
     "discountedPrice": "折扣后价格",
     "fee": "手续费",
     "actualAmountToPay": "实际支付金额",
@@ -475,7 +475,11 @@
     "redemptionCodeTopup": "兑换码充值",
     "noRedemptionCodeText": "还没有兑换码？ 点击获取兑换码：",
     "getRedemptionCode": "获取兑换码",
-    "exchangeRate": "汇率"
+    "exchangeRate": "单价",
+    "newbieCooldownConfirm": "该套餐30天内只能购买一次，您已在30天内享受过特惠。如果强行充值将不会有任何奖励积分，你确定要继续吗？",
+    "newbieCooldownConfirmTitle": "提示",
+    "newbieConfirmCancel": "取消",
+    "newbieConfirmContinue": "确定继续"
   },
   "inviteCard": {
     "inviteReward": "邀请奖励",
@@ -874,6 +878,10 @@
         "minAmount": {
           "label": "最低充值金额（积分）",
           "placeholder": "例如：1，那么最低充值金额为1积分，请填写整数"
+        },
+        "newbieCooldownMinutes": {
+          "label": "特惠计划冷却时间（分钟）",
+          "placeholder": "例如：5 表示 5 分钟，43200 表示 30 天（30×24×60）"
         },
         "discountInfo": "固定金额充值折扣设置示例： <br />为一个 JSON文本，键为充值金额，值为折扣，比如 &#123;&quot;10&quot;:0.9&#125; 表示充值10积分按照9折计算 <br />计算公式：实际费用=（原始价值*折扣+原始价值*折扣*手续费率）*汇率",
         "discount": {
