@@ -3,6 +3,12 @@
 
 # 开发调试：仅启动依赖时执行 docker-compose up -d（不带 --profile app）
 # 完整启动（含应用）时执行 docker-compose --profile app up -d
+#
+# 【修改密码说明】若需修改 MySQL 或应用密钥，请同步修改以下两处，保持一致：
+#   1) one-hub 的 environment.SQL_DSN 中的 用户名:密码（格式 user:pass@tcp(...)）
+#   2) db 的 environment 中的 MYSQL_ROOT_PASSWORD / MYSQL_USER / MYSQL_PASSWORD
+#   SESSION_SECRET、USER_TOKEN_SECRET 为应用会话密钥，生产环境请改为随机字符串。
+#
 services:
   one-hub:
     profiles:
@@ -18,6 +24,8 @@ services:
     volumes:
       - ./data:/data
     environment:
+      # 数据库密码修改在此处！！！
+      # 格式：用户名:密码@tcp(主机:端口)/库名 —— 修改密码时此处与 db.MYSQL_PASSWORD 保持一致
       - SQL_DSN=oneapi:123456@tcp(db:3306)/one-api
       - REDIS_CONN_STRING=redis://redis
       - SESSION_SECRET=aaaa1111bbbb2222cccc3333dddd5555
@@ -53,6 +61,8 @@ services:
       - "3306:3306"
     environment:
       TZ: Asia/Shanghai
+      # 数据库密码修改在此处！！！
+      # 修改 MySQL 密码时：改下面三项，并同步修改上面 one-hub 的 SQL_DSN 中的 用户名:密码
       MYSQL_ROOT_PASSWORD: "OneAPI@justsong"
       MYSQL_USER: oneapi
       MYSQL_PASSWORD: "123456"
@@ -63,3 +73,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
+
+networks:
+  default:
+    name: one-hub-net

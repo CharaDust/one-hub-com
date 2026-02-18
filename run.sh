@@ -11,6 +11,8 @@ NAME=one-api
 WEBDIR=web
 VERSION=$(git describe --tags 2>/dev/null || echo "dev")
 
+# 数据库密码修改在此处！！！
+# 本地开发用 MySQL：格式 用户名:密码@tcp(host:port)/库名。修改密码时与 docker-compose.yml 中 db.MYSQL_USER/MYSQL_PASSWORD 保持一致
 export SQL_DSN="${SQL_DSN:-oneapi:123456@tcp(127.0.0.1:3306)/one-api}"
 export REDIS_CONN_STRING="${REDIS_CONN_STRING:-redis://127.0.0.1:6379}"
 export SESSION_SECRET="${SESSION_SECRET:-aaaa1111bbbb2222cccc3333dddd5555}"
