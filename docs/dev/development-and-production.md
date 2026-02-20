@@ -157,6 +157,24 @@ cd /path/to/one-hub-com
 
 - **使用现成镜像**：在 `docker-compose.yml` 中指定镜像并执行 `docker-compose --profile app pull` 后，再 `./run.sh up` 或 `./run.sh restart`。
 
+### 2.6 子路径部署（反向代理挂子路径）
+
+若通过 Nginx 等反向代理将应用挂在子路径下（如 `https://example.com/one-hub/`），且**代理把完整路径转发给后端**（例如请求 `/one-hub/assets/index-xxx.js` 时后端收到的是 `/one-hub/assets/...` 而不是 `/assets/...`），会出现：
+
+- 浏览器报错：`Failed to load module script: Expected a JavaScript module but the server responded with a MIME type of "text/html"`
+
+原因是静态资源请求落到了 SPA 回退逻辑，返回了 `index.html`。需同时做两点：
+
+1. **后端**：设置环境变量 `WEB_BASE_PATH` 与子路径一致（不要末尾斜杠），例如：
+   - 在 `docker-compose.yml` 的 `one-hub` 的 `environment` 中增加：`WEB_BASE_PATH: "/one-hub"`
+   - 或配置文件中设置：`web_base_path: "/one-hub"`
+
+2. **前端构建**：子路径部署时前端需用相同 base 构建，否则脚本地址仍会错。构建时设置：
+   - `VITE_BASE_PATH=/one-hub/`（末尾可带斜杠），例如：
+   - `VITE_BASE_PATH=/one-hub/ yarn build`（在 `web` 目录下），或 Docker 构建时传入该构建参数并在 `vite build` 前 export。
+
+若代理已配置为「重写路径」（例如 Nginx `proxy_pass http://backend/;` 带尾部斜杠，使后端收到 `/assets/...`），则无需设置 `WEB_BASE_PATH`，按根路径部署即可。
+
 ---
 
 ## 三、开发 vs 生产对照

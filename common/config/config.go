@@ -51,4 +51,6 @@ func defaultConfig() {
 	viper.SetDefault("uptime_kuma.enable", false)
 	viper.SetDefault("uptime_kuma.domain", "")
 	viper.SetDefault("uptime_kuma.status_page_name", "")
+	// 子路径部署时设置，如 /one-hub，需与前端构建时的 base 一致（Vite base: '/one-hub/'）
+	viper.SetDefault("web_base_path", "")
 }

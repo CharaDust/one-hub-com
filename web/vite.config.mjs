@@ -5,9 +5,11 @@ import react from '@vitejs/plugin-react';
 import jsconfigPaths from 'vite-jsconfig-paths';
 
 // ----------------------------------------------------------------------
+// 子路径部署时设置 VITE_BASE_PATH，例如 /one-hub/，需与后端 WEB_BASE_PATH 一致（如 /one-hub）
+const base = process.env.VITE_BASE_PATH || './';
 
 export default defineConfig({
-  base: './',
+  base,
   // 不使用自定义 outDir，Docker 内用默认 dist 再 mv 为 build，避免 build-html 解析失败
   plugins: [react(), jsconfigPaths()],
   // https://github.com/jpuri/react-draft-wysiwyg/issues/1317
