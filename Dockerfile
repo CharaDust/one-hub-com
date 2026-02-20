@@ -14,7 +14,7 @@ COPY ./VERSION .
 RUN yarn add vite@6
 # 删除可能被 COPY ./web 带入的本地 build/dist，否则 Vite 会处理旧 index.html 并报错
 RUN rm -rf build dist
-RUN DISABLE_ESLINT_PLUGIN='true' VITE_APP_VERSION=$(cat VERSION) npx vite build --base=./ && mv dist build
+RUN DISABLE_ESLINT_PLUGIN='true' VITE_APP_VERSION=$(cat VERSION) npx vite build --base=/ && mv dist build
 
 FROM golang:1.25.0 AS builder2
 
