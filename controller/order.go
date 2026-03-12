@@ -65,7 +65,8 @@ func CreateOrder(c *gin.Context) {
 	tradeNo := utils.GenerateTradeNo()
 	payRequest, err := paymentService.Pay(tradeNo, payMoney, user)
 	if err != nil {
-		common.APIRespondWithError(c, http.StatusOK, errors.New("创建支付失败，请稍后再试"))
+		logger.SysError(fmt.Sprintf("create order pay failed: %v", err))
+		common.APIRespondWithError(c, http.StatusOK, err)
 		return
 	}
 
