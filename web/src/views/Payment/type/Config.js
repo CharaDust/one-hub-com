@@ -1,5 +1,6 @@
 const PaymentType = {
   epay: '易支付',
+  jeepay: '计全支付',
   alipay: '支付宝',
   wxpay: '微信支付',
   stripe: 'Stripe',
@@ -7,7 +8,7 @@ const PaymentType = {
 
 const CurrencyType = {
   CNY: '人民币',
-  USD: '美元'
+  USD: '积分'
 };
 
 const PaymentConfig = {
@@ -68,6 +69,48 @@ const PaymentConfig = {
           name: 'USDT',
           value: 'usdt'
         }
+      ]
+    }
+  },
+  jeepay: {
+    pay_domain: {
+      name: '支付域名',
+      description: '计全支付网关地址，如 https://pay.jeepay.vip',
+      type: 'text',
+      value: ''
+    },
+    mch_no: {
+      name: '商户号',
+      description: '计全商户号',
+      type: 'text',
+      value: ''
+    },
+    app_id: {
+      name: '应用ID',
+      description: '计全应用ID',
+      type: 'text',
+      value: ''
+    },
+    key: {
+      name: '密钥',
+      description: '计全 API 私钥，用于签名与验签',
+      type: 'text',
+      value: ''
+    },
+    way_code: {
+      name: '支付方式',
+      description: '计全支付方式，见文档 https://docs.jeequan.com/docs/jeepay/payment_api',
+      type: 'select',
+      value: 'ALI_PC',
+      options: [
+        { name: '聚合二维码(用户扫商家,支持微信/支付宝/云闪付)', value: 'QR_CASHIER' },
+        { name: '支付宝PC网站-ALI_PC', value: 'ALI_PC' },
+        { name: '支付宝WAP-ALI_WAP', value: 'ALI_WAP' },
+        { name: '支付宝二维码-ALI_QR', value: 'ALI_QR' },
+        { name: '微信扫码-WX_NATIVE', value: 'WX_NATIVE' },
+        { name: '微信条码-WX_BAR', value: 'WX_BAR' },
+        { name: '微信H5-WX_H5', value: 'WX_H5' },
+        { name: '微信公众号-WX_JSAPI', value: 'WX_JSAPI' }
       ]
     }
   },

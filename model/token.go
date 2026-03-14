@@ -21,6 +21,9 @@ var (
 	ErrTokenStatusUnavailable = errors.New("令牌状态不可用")
 	ErrTokenInvalid           = errors.New("无效的令牌")
 	ErrTokenQuotaGet          = errors.New("获取令牌额度失败")
+	ErrTokenFormat            = errors.New("令牌格式错误（请使用完整的 API Key，不要截断或修改）")
+	ErrTokenOldFormat         = errors.New("旧版令牌已失效，请从令牌管理使用新 API Key")
+	ErrUserDisabled           = errors.New("该令牌对应用户已被禁用")
 )
 
 type Token struct {
@@ -179,7 +182,7 @@ func GetTokensListByAdmin(params *AdminSearchTokensParams) (*DataResult[TokenWit
 
 func GetTokenModel(key string) (token *Token, err error) {
 	if key == "" {
-		return nil, ErrTokenInvalid
+		return nil, errors.New("未提供 API Key，请确保请求头 Authorization 中携带 Bearer sk-xxx 或 x-api-key")
 	}
 
 	var userId int
@@ -192,31 +195,34 @@ func GetTokenModel(key string) (token *Token, err error) {
 		if config.RedisEnabled {
 			exists, _ := redis.RedisSIsMember(OldUserTokensCacheKey, key)
 			if !exists {
-				return nil, ErrTokenInvalid
+				return nil, ErrTokenOldFormat
 			}
 		}
 	case 59:
 		tokenId, userId, err = common.ValidateToken(key)
-		if err != nil || userId == 0 || tokenId == 0 {
-			return nil, ErrTokenInvalid
+		if err != nil {
+			return nil, err // 返回具体错误，如签名验证失败、签名解码失败等，便于排查
+		}
+		if userId == 0 || tokenId == 0 {
+			return nil, ErrTokenFormat
 		}
 		if userEnabled, err := CacheIsUserEnabled(userId); err != nil || !userEnabled {
-			return nil, ErrTokenInvalid
+			return nil, ErrUserDisabled
 		}
 	default:
-		return nil, ErrTokenInvalid
+		return nil, ErrTokenFormat
 	}
 
 	token, err = CacheGetTokenByKey(key)
 	if err != nil {
 		maskedKey := key[:3] + "*********" + key[len(key)-3:]
 		logger.SysError(fmt.Sprintf("DB Not Found: userId=%d, tokenId=%d, key=%s, err=%s", userId, tokenId, maskedKey, err.Error()))
-		return nil, ErrTokenInvalid
+		return nil, ErrTokenNotFound
 	}
 
 	if validUser {
 		if userEnabled, err := CacheIsUserEnabled(token.UserId); err != nil || !userEnabled {
-			return nil, ErrTokenInvalid
+			return nil, ErrUserDisabled
 		}
 	}
 

@@ -94,6 +94,7 @@ func InitOptionMap() {
 	config.GlobalOption.RegisterString("ChatImageRequestProxy", &config.ChatImageRequestProxy)
 	config.GlobalOption.RegisterFloat("PaymentUSDRate", &config.PaymentUSDRate)
 	config.GlobalOption.RegisterInt("PaymentMinAmount", &config.PaymentMinAmount)
+	config.GlobalOption.RegisterInt("NewbieTagCooldownMinutes", &config.NewbieTagCooldownMinutes)
 
 	config.GlobalOption.RegisterCustom("RechargeDiscount", func() string {
 		return common.RechargeDiscount2JSONString()

@@ -21,7 +21,7 @@ import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ThemeButton from 'ui-component/ThemeButton';
 import { NoticeButton } from 'ui-component/notice';
-import I18nButton from 'ui-component/i18nButton';
+// import I18nButton from 'ui-component/i18nButton'; // 语言切换暂不展示
 import { IconMenu2 } from '@tabler/icons-react';
 import Transitions from 'ui-component/extended/Transitions';
 import MainCard from 'ui-component/cards/MainCard';
@@ -69,7 +69,7 @@ const Header = () => {
           <>
             <NoticeButton sx={{ color: theme.palette.text.primary, mr: 1 }} />
             <ThemeButton sx={{ color: theme.palette.text.primary, mr: 1 }} />
-            <I18nButton sx={{ color: theme.palette.text.primary, mr: 1 }} />
+            {/* <I18nButton sx={{ color: theme.palette.text.primary, mr: 1 }} /> */}
             <IconButton
               onClick={handleOpenMenu}
               sx={{
@@ -161,7 +161,7 @@ const Header = () => {
 
             <NoticeButton sx={{ color: theme.palette.text.primary, ml: 1 }} />
             <ThemeButton sx={{ color: theme.palette.text.primary, ml: 0.5 }} />
-            <I18nButton sx={{ color: theme.palette.text.primary, ml: 0.5 }} />
+            {/* <I18nButton sx={{ color: theme.palette.text.primary, ml: 0.5 }} /> */}
             {account.user ? (
               <Button
                 component={Link}

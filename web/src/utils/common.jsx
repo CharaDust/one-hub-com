@@ -528,9 +528,9 @@ export function renderQuota(quota, digits = 2) {
   displayInCurrency = displayInCurrency === 'true';
   if (displayInCurrency) {
     if (quota < 0) {
-      return '-$' + calculateQuota(Math.abs(quota), digits);
+      return '-Credit ' + calculateQuota(Math.abs(quota), digits);
     }
-    return '$' + calculateQuota(quota, digits);
+    return 'Credit ' + calculateQuota(quota, digits);
   }
   return renderNumber(quota);
 }
@@ -737,7 +737,7 @@ export function ValueFormatter(value, onlyUsd = false, unitMillion = false) {
   if (onlyUsd) {
     usd = usd.replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1');
 
-    return `$${usd}`;
+    return `Credit ${usd}`;
   }
 
   let rmb = decimalValue.mul(0.014).toPrecision(6);
@@ -745,5 +745,5 @@ export function ValueFormatter(value, onlyUsd = false, unitMillion = false) {
   usd = usd.replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1');
   rmb = rmb.replace(/(\.\d*?[1-9])0+$|\.0*$/, '$1');
 
-  return `$${usd} / ￥${rmb}`;
+  return `Credit ${usd} / ￥${rmb}`;
 }

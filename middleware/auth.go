@@ -3,7 +3,9 @@ package middleware
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 	"one-api/common/config"
+	"one-api/common/logger"
 	"one-api/common/utils"
 	"one-api/model"
 	"strings"
@@ -116,9 +118,14 @@ func RootAuth() func(c *gin.Context) {
 func tokenAuth(c *gin.Context, key string) {
 	key = strings.TrimPrefix(key, "Bearer ")
 	key = strings.TrimPrefix(key, "sk-")
+	// 若 key 从 URL 传入（如 iframe 对话页），可能被编码：_ -> %5F，导致校验失败
+	if decoded, err := url.QueryUnescape(key); err == nil {
+		key = decoded
+	}
 
 	if len(key) < 48 {
-		abortWithMessage(c, http.StatusUnauthorized, "无效的令牌")
+		logger.SysError(fmt.Sprintf("token auth failed: path=%s key_len=%d (need 48 or 59)", c.Request.URL.Path, len(key)))
+		abortWithMessage(c, http.StatusUnauthorized, "无效的令牌（长度不足或格式错误，请检查 API Key）")
 		return
 	}
 
@@ -126,6 +133,8 @@ func tokenAuth(c *gin.Context, key string) {
 	key = parts[0]
 	token, err := model.ValidateUserToken(key)
 	if err != nil {
+		// 仅记录 path 与 key 长度，便于排查 401（不记录 key 内容）
+		logger.SysError(fmt.Sprintf("token auth failed: path=%s key_len=%d err=%s", c.Request.URL.Path, len(key), err.Error()))
 		abortWithMessage(c, http.StatusUnauthorized, err.Error())
 		return
 	}
@@ -210,6 +219,16 @@ func OpenaiAuth() func(c *gin.Context) {
 	return func(c *gin.Context) {
 		isWebSocket := c.GetHeader("Upgrade") == "websocket"
 		key := c.Request.Header.Get("Authorization")
+		if key == "" {
+			key = c.Request.Header.Get("X-API-Key")
+		}
+		if key == "" {
+			// 部分前端/iframe 将 API Key 放在 query（如从 URL 传入），兼容读取
+			key = c.Query("api_key")
+			if key == "" {
+				key = c.Query("key")
+			}
+		}
 
 		if isWebSocket && key == "" {
 			protocols := c.Request.Header["Sec-Websocket-Protocol"]

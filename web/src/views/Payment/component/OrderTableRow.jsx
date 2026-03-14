@@ -29,8 +29,8 @@ export default function OrderTableRow({ item }) {
         <TableCell>{item.user_id}</TableCell>
         <TableCell>{item.trade_no}</TableCell>
         <TableCell>{item.gateway_no}</TableCell>
-        <TableCell>${item.amount}</TableCell>
-        <TableCell>${item.fee}</TableCell>
+        <TableCell>{'Credit ' + item.amount}</TableCell>
+        <TableCell>{'Credit ' + item.fee}</TableCell>
         <TableCell>
           {item.discount} {item.order_currency}
         </TableCell>

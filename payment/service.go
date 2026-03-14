@@ -82,6 +82,6 @@ func (s *PaymentService) getNotifyURL() string {
 }
 
 func (s *PaymentService) getReturnURL() string {
-	serverAdd := strings.TrimSuffix(config.ServerAddress, "/")
-	return fmt.Sprintf("%s/panel/log", serverAdd)
+	// 与 notify 使用同一 URL：部分网关只跳转 return_url 不请求 notify_url，浏览器跳转也会触发回调并发积分
+	return s.getNotifyURL()
 }

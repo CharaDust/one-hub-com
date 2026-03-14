@@ -214,7 +214,7 @@ const EditModal = ({
       case 'rate':
         return 'Rate：';
       case 'USD':
-        return `USD(${localUnit})：`;
+        return `积分(${localUnit})：`;
       case 'RMB':
         return `RMB(${localUnit})：`;
     }

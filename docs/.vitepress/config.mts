@@ -52,6 +52,7 @@ export default defineConfig({
       {
         text: '开发',
         items: [
+          { text: '开发与生产步骤', link: '/dev/development-and-production' },
           { text: '开发说明', link: '/dev/index' }
         ]
       },

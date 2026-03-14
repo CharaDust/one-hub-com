@@ -145,8 +145,8 @@ const StatisticalLineChartCard = ({ isLoading, title, chartData, todayValue, las
 
   // 计算百分比变化
   const getPercentChange = () => {
-    const todayValueNum = parseFloat((todayValue || '0').toString().replace('$', ''));
-    const lastDayValueNum = parseFloat((lastDayValue || '0').toString().replace('$', ''));
+    const todayValueNum = parseFloat((todayValue || '0').toString().replace(/\$|Credit\s*/g, ''));
+    const lastDayValueNum = parseFloat((lastDayValue || '0').toString().replace(/\$|Credit\s*/g, ''));
 
     if (todayValueNum === 0 && lastDayValueNum === 0) return 0;
     if (todayValueNum === 0 && lastDayValueNum > 0) return -100;

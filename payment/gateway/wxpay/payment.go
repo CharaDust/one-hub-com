@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"one-api/model"
 	"one-api/payment/types"
@@ -42,8 +41,7 @@ func (w *WeChatPay) InitClient(config *WeChatConfig) error {
 	// 使用 utils 提供的函数从本地文件中加载商户私钥，商户私钥会用来生成请求的签名
 	mchPrivateKey, err := utils.LoadPrivateKey(config.MchPrivateKey)
 	if err != nil {
-		log.Fatal("load merchant private key error")
-		return err
+		return fmt.Errorf("load merchant private key error: %w", err)
 	}
 	ctx := context.Background()
 	// 使用商户私钥等初始化 client，并使它具有自动定时获取微信支付平台证书的能力

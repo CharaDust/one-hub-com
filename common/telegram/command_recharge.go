@@ -49,7 +49,7 @@ func commandRechargeToken(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	money := fmt.Sprintf("%.2f", float64(quota)/500000)
-	_, err = ctx.EffectiveMessage.Reply(b, fmt.Sprintf("成功充值 $%s ", money), nil)
+	_, err = ctx.EffectiveMessage.Reply(b, fmt.Sprintf("成功充值 Credit %s ", money), nil)
 	if err != nil {
 		return fmt.Errorf("failed to send recharge token message: %w", err)
 	}

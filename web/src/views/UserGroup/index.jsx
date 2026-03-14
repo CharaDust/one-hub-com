@@ -189,8 +189,8 @@ export default function UserGroup() {
                   { id: 'api_rate', label: t('userGroup.apiRate'), disableSort: false },
                   { id: 'public', label: t('userGroup.public'), disableSort: false },
                   { id: 'promotion', label: t('userGroup.promotion'), disableSort: false },
-                  { id: 'min', label: t('userGroup.min') + '($)', disableSort: false },
-                  { id: 'max', label: t('userGroup.max') + '($)', disableSort: false },
+                  { id: 'min', label: t('userGroup.min') + '(Credit)', disableSort: false },
+                  { id: 'max', label: t('userGroup.max') + '(Credit)', disableSort: false },
                   { id: 'enable', label: t('userGroup.enable'), disableSort: false },
 
                   { id: 'action', label: t('userPage.action'), disableSort: true }

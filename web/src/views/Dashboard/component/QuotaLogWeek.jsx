@@ -82,7 +82,7 @@ const QuotaLogWeek = ({ data }) => {
                     {row.date}
                   </TableCell>
                   <TableCell align="right">{row.requests}</TableCell>
-                  <TableCell align="right">${row.amount}</TableCell>
+                  <TableCell align="right">{'Credit ' + row.amount}</TableCell>
                   <TableCell align="right">{row.tokens}</TableCell>
                   {/* <TableCell align="right">{row.cacheTokens}</TableCell> */}
                   <TableCell align="right">{row.duration}</TableCell>

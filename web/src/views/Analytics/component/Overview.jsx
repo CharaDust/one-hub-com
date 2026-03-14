@@ -228,8 +228,8 @@ function getBarChartOptions(data, dateRange) {
 
   let channelData = {};
 
-  channelData.costs = generateBarChartOptions(dates, Array.from(result.costs.data.values()), '美元', 3);
-  channelData.costs.options.title.text = '总消费：$' + renderChartNumber(result.costs.total, 3);
+  channelData.costs = generateBarChartOptions(dates, Array.from(result.costs.data.values()), '积分', 3);
+  channelData.costs.options.title.text = '总消费：Credit ' + renderChartNumber(result.costs.total, 3);
 
   channelData.tokens = generateBarChartOptions(dates, Array.from(result.tokens.data.values()), '', 0);
   channelData.tokens.options.title.text = '总Tokens：' + renderChartNumber(result.tokens.total, 0);
@@ -285,7 +285,7 @@ function getRedemptionData(data, dateRange) {
   const dates = getDates(dateRange.start, dateRange.end);
   const result = [
     {
-      name: '兑换金额($)',
+      name: '兑换金额(Credit)',
       type: 'column',
       data: new Array(dates.length).fill(0)
     },
@@ -325,7 +325,7 @@ function getRedemptionData(data, dateRange) {
       yaxis: [
         {
           title: {
-            text: '兑换金额($)'
+            text: '兑换金额(Credit)'
           }
         },
         {

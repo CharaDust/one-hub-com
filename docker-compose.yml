@@ -1,24 +1,36 @@
-version: "3.4"
+# 基于 docker-compose.yml.bak 模板，使用 MySQL，应用本地构建
+# version 已废弃，Compose 会自动识别，已移除以避免警告
 
+# 开发调试：仅启动依赖时执行 docker-compose up -d（不带 --profile app）
+# 完整启动（含应用）时执行 docker-compose --profile app up -d
+#
+# 【修改密码说明】若需修改 MySQL 或应用密钥，请同步修改以下两处，保持一致：
+#   1) one-hub 的 environment.SQL_DSN 中的 用户名:密码（格式 user:pass@tcp(...)）
+#   2) db 的 environment 中的 MYSQL_ROOT_PASSWORD / MYSQL_USER / MYSQL_PASSWORD
+#   SESSION_SECRET、USER_TOKEN_SECRET 为应用会话密钥，生产环境请改为随机字符串。
+#
 services:
   one-hub:
-    image: martialbe/one-api:latest
-    container_name: one-hub
+    profiles:
+      - app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: one-hub:latest
+    container_name: one-hub-com
     restart: always
     ports:
       - "3000:3000"
     volumes:
       - ./data:/data
     environment:
-      - SQL_DSN=oneapi:123456@tcp(db:3306)/one-api # 修改此行，或注释掉以使用 SQLite 作为数据库
-      - REDIS_CONN_STRING=redis://redis # redis
-      - SESSION_SECRET=random_string # 修改为随机字符串
-      - USER_TOKEN_SECRET=random_string # 修改为随机字符串,32位以上
+      # 数据库密码修改在此处！！！
+      # 格式：用户名:密码@tcp(主机:端口)/库名 —— 修改密码时此处与 db.MYSQL_PASSWORD 保持一致
+      - SQL_DSN=oneapi:123456@tcp(db:3306)/one-api
+      - REDIS_CONN_STRING=redis://redis
+      - SESSION_SECRET=aaaa1111bbbb2222cccc3333dddd5555
+      - USER_TOKEN_SECRET=aaaa1111bbbb2222cccc3333dddd4444
       - TZ=Asia/Shanghai
-      # - HASHIDS_SALT=random_string # 可空，建议设置，字符串元素不能重复
-    #      - NODE_TYPE=slave  # 多机部署时从节点取消注释该行
-    #      - SYNC_FREQUENCY=60  # 需要定期从数据库加载数据时取消注释该行
-    #      - FRONTEND_BASE_URL=https://openai.justsong.cn  # 多机部署时从节点取消注释该行
     depends_on:
       - redis
       - db
@@ -34,20 +46,34 @@ services:
 
   redis:
     image: redis:latest
-    container_name: redis
+    container_name: one-hub-redis
     restart: always
+    ports:
+      - "6379:6379"
 
   db:
     image: mysql:8.2.0
     restart: always
-    container_name: mysql
+    container_name: one-hub-mysql
     volumes:
-      - ./data/mysql:/var/lib/mysql # 挂载目录，持久化存储
+      - ./data/mysql:/var/lib/mysql
     ports:
       - "3306:3306"
     environment:
-      TZ: Asia/Shanghai # 设置时区
-      MYSQL_ROOT_PASSWORD: "OneAPI@justsong" # 设置 root 用户的密码
-      MYSQL_USER: oneapi # 创建专用用户
-      MYSQL_PASSWORD: "123456" # 设置专用用户密码
-      MYSQL_DATABASE: one-api # 自动创建数据库
+      TZ: Asia/Shanghai
+      # 数据库密码修改在此处！！！
+      # 修改 MySQL 密码时：改下面三项，并同步修改上面 one-hub 的 SQL_DSN 中的 用户名:密码
+      MYSQL_ROOT_PASSWORD: "OneAPI@justsong"
+      MYSQL_USER: oneapi
+      MYSQL_PASSWORD: "123456"
+      MYSQL_DATABASE: one-api
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+networks:
+  default:
+    name: one-hub-net

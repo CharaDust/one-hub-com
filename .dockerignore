@@ -1,0 +1,8 @@
+# 前端构建产物，避免 COPY ./web 时带入旧 index.html 导致 Vite build-html 解析失败
+web/build
+web/dist
+# 常见忽略
+.git
+.gitignore
+*.md
+web/node_modules

@@ -1,5 +1,22 @@
 # Docker 构建与镜像加速
 
+## 若报错「no configuration file provided: not found」
+
+该提示来自 **Docker Compose**，表示当前目录下没有找到 `docker-compose.yml`。请任选其一：
+
+1. **在项目根目录执行**（推荐）：先进入仓库根目录再执行 compose 命令。
+   ```bash
+   cd /path/to/one-hub-com
+   docker compose up -d --build
+   ```
+
+2. **任意目录下指定配置文件**：用 `-f` 指定 compose 文件路径。
+   ```bash
+   docker compose -f /path/to/one-hub-com/docker-compose.yml up -d --build
+   ```
+
+---
+
 当执行 `docker compose up -d --build` 时若出现拉取基础镜像失败（如 `registry-1.docker.io` 或其它镜像站返回 **EOF**），多为当前网络无法稳定访问镜像仓库，可按以下方式处理。
 
 ## 方式一：配置 Docker 镜像加速（推荐）

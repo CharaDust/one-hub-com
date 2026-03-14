@@ -1,0 +1,9 @@
+.env
+.env.*
+.git
+README.md
+docker-compose.yml
+.dockerignore
+.gitignore
+*.tar
+*.tar.gz

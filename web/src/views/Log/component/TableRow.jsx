@@ -169,7 +169,7 @@ export default function LogTableRow({ item, userIsAdmin, userGroup, columnVisibi
             ) : item.quota ? (
               renderQuota(item.quota, 6)
             ) : (
-              '$0'
+              'Credit 0'
             )}
           </TableCell>
         )}

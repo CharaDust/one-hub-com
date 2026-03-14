@@ -54,6 +54,7 @@ const OperationSetting = () => {
     ChatImageRequestProxy: '',
     PaymentUSDRate: 0,
     PaymentMinAmount: 1,
+    NewbieTagCooldownMinutes: 5,
     RechargeDiscount: '',
     CFWorkerImageUrl: '',
     CFWorkerImageKey: '',
@@ -262,6 +263,9 @@ const OperationSetting = () => {
           }
           if (originInputs['PaymentMinAmount'] !== inputs.PaymentMinAmount) {
             await updateOption('PaymentMinAmount', inputs.PaymentMinAmount);
+          }
+          if (originInputs['NewbieTagCooldownMinutes'] !== inputs.NewbieTagCooldownMinutes) {
+            await updateOption('NewbieTagCooldownMinutes', inputs.NewbieTagCooldownMinutes);
           }
           if (originInputs['RechargeDiscount'] !== inputs.RechargeDiscount) {
             try {
@@ -838,6 +842,19 @@ const OperationSetting = () => {
                   onChange={handleInputChange}
                   label={t('setting_index.operationSettings.paymentSettings.minAmount.label')}
                   placeholder={t('setting_index.operationSettings.paymentSettings.minAmount.placeholder')}
+                  disabled={loading}
+                />
+              </FormControl>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="NewbieTagCooldownMinutes">{t('setting_index.operationSettings.paymentSettings.newbieCooldownMinutes.label')}</InputLabel>
+                <OutlinedInput
+                  id="NewbieTagCooldownMinutes"
+                  name="NewbieTagCooldownMinutes"
+                  type="number"
+                  value={inputs.NewbieTagCooldownMinutes}
+                  onChange={handleInputChange}
+                  label={t('setting_index.operationSettings.paymentSettings.newbieCooldownMinutes.label')}
+                  placeholder={t('setting_index.operationSettings.paymentSettings.newbieCooldownMinutes.placeholder')}
                   disabled={loading}
                 />
               </FormControl>
