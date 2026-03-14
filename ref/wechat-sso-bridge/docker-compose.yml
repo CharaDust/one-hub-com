@@ -1,0 +1,13 @@
+version: '3'
+services:
+  wechat-sso-bridge:
+    build: .
+    image: wechat-sso-bridge:latest
+    container_name: wechat-sso-bridge
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - PORT=3000

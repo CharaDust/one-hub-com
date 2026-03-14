@@ -103,12 +103,14 @@ const PaymentConfig = {
       type: 'select',
       value: 'ALI_PC',
       options: [
-        { name: '支付宝PC网站', value: 'ALI_PC' },
-        { name: '支付宝WAP', value: 'ALI_WAP' },
-        { name: '支付宝二维码', value: 'ALI_QR' },
-        { name: '微信扫码', value: 'WX_NATIVE' },
-        { name: '微信H5', value: 'WX_H5' },
-        { name: '聚合扫码(收银台)', value: 'QR_CASHIER' }
+        { name: '聚合二维码(用户扫商家,支持微信/支付宝/云闪付)', value: 'QR_CASHIER' },
+        { name: '支付宝PC网站-ALI_PC', value: 'ALI_PC' },
+        { name: '支付宝WAP-ALI_WAP', value: 'ALI_WAP' },
+        { name: '支付宝二维码-ALI_QR', value: 'ALI_QR' },
+        { name: '微信扫码-WX_NATIVE', value: 'WX_NATIVE' },
+        { name: '微信条码-WX_BAR', value: 'WX_BAR' },
+        { name: '微信H5-WX_H5', value: 'WX_H5' },
+        { name: '微信公众号-WX_JSAPI', value: 'WX_JSAPI' }
       ]
     }
   },

@@ -1,0 +1,5 @@
+wechat-sso-bridge
+wechat-sso-bridge.exe
+*.exe
+.env
+.env.local

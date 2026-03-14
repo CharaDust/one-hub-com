@@ -4,12 +4,14 @@ package jeepay
 type WayCode string
 
 const (
-	WayCodeQRCashier  WayCode = "QR_CASHIER"  // 聚合扫码(用户扫商家)
+	WayCodeQRCashier  WayCode = "QR_CASHIER"  // 聚合二维码/聚合扫码(用户扫商家，支持微信/支付宝/云闪付)
 	WayCodeAliPC      WayCode = "ALI_PC"      // 支付宝PC网站
 	WayCodeAliWAP     WayCode = "ALI_WAP"     // 支付宝WAP
 	WayCodeAliQR      WayCode = "ALI_QR"      // 支付宝二维码
 	WayCodeWxNative   WayCode = "WX_NATIVE"   // 微信扫码
 	WayCodeWxH5       WayCode = "WX_H5"       // 微信H5
+	WayCodeWxBar      WayCode = "WX_BAR"      // 微信条码
+	WayCodeWxJsapi    WayCode = "WX_JSAPI"    // 微信公众号
 )
 
 const (

@@ -62,15 +62,19 @@ func (j *Jeepay) Pay(cfg *types.PayConfig, gatewayConfig string) (*types.PayRequ
 		ChannelExtra: channelExtra,
 	}
 
+	// 计全将向此地址 POST 支付结果，必须是公网可访问的 URL，否则收不到回调、订单不会完成
+	logger.SysLog(fmt.Sprintf("jeepay unified order notify_url=%s (must be publicly reachable)", cfg.NotifyURL))
+
 	data, err := client.UnifiedOrder(req)
 	if err != nil {
 		return nil, err
 	}
 
-	// payDataType: payUrl / form / codeUrl / codeImgUrl
+	// payDataType: payUrl / form / codeUrl / codeImgUrl（计全可能返回小写如 payurl）
 	payURL := strings.TrimSpace(data.PayData)
-	switch data.PayDataType {
-	case "payUrl", "form":
+	dt := strings.ToLower(strings.TrimSpace(data.PayDataType))
+	switch dt {
+	case "payurl", "form":
 		return &types.PayRequest{
 			Type: 1,
 			Data: types.PayRequestData{
@@ -78,7 +82,7 @@ func (j *Jeepay) Pay(cfg *types.PayConfig, gatewayConfig string) (*types.PayRequ
 				Method: http.MethodGet,
 			},
 		}, nil
-	case "codeUrl", "codeImgUrl":
+	case "codeurl", "codeimgurl":
 		return &types.PayRequest{
 			Type: 2,
 			Data: types.PayRequestData{
