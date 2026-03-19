@@ -498,7 +498,10 @@
     "usernameOrEmail": "用戶名/電郵",
     "usernameRequired": "用戶名/電郵為必填項",
     "wechatLoginInfo": "請使用微信掃描二維碼關注公眾號，輸入「驗證碼」獲取驗證碼（有效期三分鐘）",
-    "wechatVerificationCodeLogin": "微信驗證碼登錄"
+    "wechatVerificationCodeLogin": "微信驗證碼登錄",
+    "wechatScanLogin": "微信掃碼登錄",
+    "wechatCallbackSuccess": "登錄成功，正在關閉…",
+    "wechatCallbackNoCode": "未收到 code，請從登錄頁重新掃碼。"
   },
   "menu": {
     "about": "關於",

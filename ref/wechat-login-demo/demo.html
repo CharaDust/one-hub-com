@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>本机测试 - 微信扫码登录</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 24px;
+      min-height: 100vh;
+      background: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    h1 { font-size: 1.5rem; color: #333; margin-bottom: 24px; }
+    .config {
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 24px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .config summary { cursor: pointer; font-weight: 500; color: #555; }
+    .config[open] summary { margin-bottom: 12px; }
+    .config label { display: block; font-size: 13px; color: #666; margin-top: 10px; }
+    .config input {
+      width: 100%;
+      padding: 8px 10px;
+      margin-top: 4px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .btn-login {
+      padding: 12px 32px;
+      font-size: 16px;
+      background: #07c160;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+    .btn-login:hover { background: #06ad56; }
+    .btn-login:disabled { background: #ccc; cursor: not-allowed; }
+    .result {
+      display: none;
+      width: 100%;
+      max-width: 560px;
+      margin-top: 24px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+    .result.visible { display: block; }
+    .result h2 { font-size: 1.1rem; color: #333; margin: 0 0 12px 0; }
+    .result .param { margin-bottom: 12px; }
+    .result .param label { font-size: 12px; color: #888; display: block; margin-bottom: 2px; }
+    .result .param pre, .result .param code {
+      background: #f6f6f6;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      overflow-x: auto;
+      word-break: break-all;
+    }
+    .result .next-steps { margin-top: 16px; padding-top: 16px; border-top: 1px solid #eee; }
+    .result .next-steps ul { margin: 8px 0 0 0; padding-left: 20px; color: #555; font-size: 14px; line-height: 1.6; }
+    .warn { background: #fff3cd; color: #856404; padding: 10px 12px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; max-width: 420px; }
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.visible { display: flex; }
+    .modal-box {
+      background: #fff;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 360px;
+      max-height: 90vh;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: rgba(0,0,0,0.05);
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      z-index: 1;
+      color: #666;
+    }
+    .modal-close:hover { background: rgba(0,0,0,0.1); }
+    .modal-box iframe {
+      display: block;
+      width: 100%;
+      height: 420px;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>本机测试 - 微信扫码登录</h1>
+
+  <div class="config">
+    <details>
+      <summary>配置（可选）</summary>
+      <label>登录服务器地址 (Base URL)</label>
+      <input type="text" id="baseUrl" value="http://localhost:3000" placeholder="http://localhost:3000">
+      <label>访问凭证 (API Token)</label>
+      <input type="text" id="apiToken" placeholder="从 wechat-sso-bridge 的 .env 中 WECHAT_API_TOKEN 复制">
+    </details>
+  </div>
+
+  <div id="warnFile" class="warn" style="display: none;">
+    请通过静态服务打开本页（如 http://localhost:8080/demo.html），否则无法完成回调。
+  </div>
+
+  <button type="button" class="btn-login" id="btnLogin">登录</button>
+
+  <div class="result" id="result">
+    <h2>登录结果</h2>
+    <div class="param">
+      <label>code（一次性）</label>
+      <pre id="outCode">-</pre>
+    </div>
+    <div class="param">
+      <label>openid</label>
+      <pre id="outOpenid">-</pre>
+    </div>
+    <div class="param">
+      <label>接口原始响应</label>
+      <pre id="outRaw">-</pre>
+    </div>
+    <div class="next-steps">
+      <h2>下一步动作</h2>
+      <ul>
+        <li>用返回的 <strong>openid</strong> 在你们系统中创建/绑定会话（session、cookie 或 token）。</li>
+        <li>跳转到业务首页或指定页面。</li>
+        <li>对接说明见 wechat-sso-bridge 目录下的「接口说明-外部系统对接.md」。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal-box">
+      <button type="button" class="modal-close" id="modalClose" aria-label="关闭">×</button>
+      <iframe id="modalIframe" title="微信扫码登录"></iframe>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var LS_BASE = 'wechat_demo_base_url';
+      var LS_TOKEN = 'wechat_demo_api_token';
+      var MSG_TYPE = 'wechat-login-success';
+
+      var baseUrlEl = document.getElementById('baseUrl');
+      var apiTokenEl = document.getElementById('apiToken');
+      var warnFile = document.getElementById('warnFile');
+      var btnLogin = document.getElementById('btnLogin');
+      var result = document.getElementById('result');
+      var outCode = document.getElementById('outCode');
+      var outOpenid = document.getElementById('outOpenid');
+      var outRaw = document.getElementById('outRaw');
+      var modal = document.getElementById('modal');
+      var modalIframe = document.getElementById('modalIframe');
+      var modalClose = document.getElementById('modalClose');
+
+      var origin = typeof location !== 'undefined' && location.origin && location.origin !== 'file://' ? location.origin : '';
+
+      if (!origin) {
+        warnFile.style.display = 'block';
+        btnLogin.disabled = true;
+      }
+
+      function openModal() {
+        var baseUrl = (baseUrlEl && baseUrlEl.value) ? baseUrlEl.value.trim() : '';
+        var apiToken = (apiTokenEl && apiTokenEl.value) ? apiTokenEl.value.trim() : '';
+        if (!baseUrl) {
+          alert('请填写登录服务器地址（Base URL）');
+          return;
+        }
+        if (!apiToken) {
+          alert('请填写访问凭证（API Token）');
+          return;
+        }
+        if (!origin) {
+          alert('请通过静态服务打开本页（如 http://localhost:8080/demo.html）');
+          return;
+        }
+        var callbackUrl = origin + '/demo-callback.html';
+        var scanUrl = baseUrl.replace(/\/$/, '') + '/?redirect_uri=' + encodeURIComponent(callbackUrl);
+        localStorage.setItem(LS_BASE, baseUrl);
+        localStorage.setItem(LS_TOKEN, apiToken);
+        modalIframe.src = scanUrl;
+        modal.classList.add('visible');
+      }
+
+      function closeModal() {
+        modal.classList.remove('visible');
+        modalIframe.src = 'about:blank';
+      }
+
+      function showResult(data) {
+        outCode.textContent = data.code || '-';
+        outOpenid.textContent = data.openid || '-';
+        outRaw.textContent = typeof data.rawResponse === 'object'
+          ? JSON.stringify(data.rawResponse, null, 2)
+          : (data.rawResponse || '-');
+        result.classList.add('visible');
+      }
+
+      btnLogin.addEventListener('click', openModal);
+      modalClose.addEventListener('click', closeModal);
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+      });
+
+      window.addEventListener('message', function (event) {
+        if (event.origin !== origin) return;
+        if (!event.data || event.data.type !== MSG_TYPE) return;
+        closeModal();
+        showResult({
+          code: event.data.code,
+          openid: event.data.openid,
+          rawResponse: event.data.rawResponse
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -517,7 +517,10 @@
     "usernameOrEmail": "Username/Email",
     "usernameRequired": "Username/Email is required",
     "wechatLoginInfo": "Please use WeChat to scan the QR code to follow the official account and enter the \"verification code\" to obtain the verification code (valid within three minutes)",
-    "wechatVerificationCodeLogin": "WeChat verification code login"
+    "wechatVerificationCodeLogin": "WeChat verification code login",
+    "wechatScanLogin": "WeChat scan to login",
+    "wechatCallbackSuccess": "Login successful, closing…",
+    "wechatCallbackNoCode": "No code received. Please scan again from the login page."
   },
   "midjourneyPage": {
     "channel": "Channel",
@@ -1149,6 +1152,8 @@
         "accessTokenPlaceholder": "Sensitive information will not be sent to the frontend",
         "learn": "Learn about WeChat Server",
         "learnLink": "Click here",
+        "scanBaseUrl": "WeChat scan page Base URL (demo mode)",
+        "scanBaseUrlPlaceholder": "e.g. http://localhost:3000",
         "qrCodeImage": "WeChat Official Account QR Code Image Link",
         "qrCodeImagePlaceholder": "Enter an image link",
         "saveButton": "Save WeChat Server Settings",

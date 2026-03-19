@@ -164,6 +164,9 @@ var LarkClientSecret = ""
 var WeChatServerAddress = ""
 var WeChatServerToken = ""
 var WeChatAccountQRCodeImageURL = ""
+// WeChatScanBaseURL 用于「iframe 扫码页」方式（对接 wechat-sso-bridge / demo）的扫码页 base URL。
+// 例如：http://localhost:3000
+var WeChatScanBaseURL = ""
 
 var TurnstileSiteKey = ""
 var TurnstileSecretKey = ""

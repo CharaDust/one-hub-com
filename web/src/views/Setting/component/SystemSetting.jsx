@@ -56,6 +56,7 @@ const SystemSetting = () => {
     WeChatServerAddress: '',
     WeChatServerToken: '',
     WeChatAccountQRCodeImageURL: '',
+    WeChatScanBaseURL: '',
     TurnstileCheckEnabled: '',
     TurnstileSiteKey: '',
     TurnstileSecretKey: '',
@@ -78,13 +79,15 @@ const SystemSetting = () => {
         data.forEach((item) => {
           newInputs[item.key] = item.value;
         });
-        setInputs({
+        // 合并而不是整体覆盖，避免后端暂未返回某些 key 时把输入清空
+        setInputs((prev) => ({
+          ...prev,
           ...newInputs,
-          EmailDomainWhitelist: newInputs.EmailDomainWhitelist.split(',')
-        });
+          EmailDomainWhitelist: (newInputs.EmailDomainWhitelist || '').split(',')
+        }));
         setOriginInputs(newInputs);
 
-        setEmailDomainWhitelist(newInputs.EmailDomainWhitelist.split(','));
+        setEmailDomainWhitelist((newInputs.EmailDomainWhitelist || '').split(','));
       } else {
         showError(message);
       }
@@ -166,6 +169,7 @@ const SystemSetting = () => {
       name === 'WeChatServerAddress' ||
       name === 'WeChatServerToken' ||
       name === 'WeChatAccountQRCodeImageURL' ||
+      name === 'WeChatScanBaseURL' ||
       name === 'TurnstileSiteKey' ||
       name === 'TurnstileSecretKey' ||
       name === 'EmailDomainWhitelist' ||
@@ -208,6 +212,9 @@ const SystemSetting = () => {
   const submitWeChat = async () => {
     if (originInputs['WeChatServerAddress'] !== inputs.WeChatServerAddress) {
       await updateOption('WeChatServerAddress', removeTrailingSlash(inputs.WeChatServerAddress));
+    }
+    if (originInputs['WeChatScanBaseURL'] !== inputs.WeChatScanBaseURL) {
+      await updateOption('WeChatScanBaseURL', removeTrailingSlash(inputs.WeChatScanBaseURL));
     }
     if (originInputs['WeChatAccountQRCodeImageURL'] !== inputs.WeChatAccountQRCodeImageURL) {
       await updateOption('WeChatAccountQRCodeImageURL', inputs.WeChatAccountQRCodeImageURL);
@@ -627,6 +634,22 @@ const SystemSetting = () => {
                   onChange={handleInputChange}
                   label={t('setting_index.systemSettings.configureWeChatServer.accessToken')}
                   placeholder={t('setting_index.systemSettings.configureWeChatServer.accessTokenPlaceholder')}
+                  disabled={loading}
+                />
+              </FormControl>
+            </Grid>
+            <Grid xs={12} md={4}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="WeChatScanBaseURL">
+                  {t('setting_index.systemSettings.configureWeChatServer.scanBaseUrl')}
+                </InputLabel>
+                <OutlinedInput
+                  id="WeChatScanBaseURL"
+                  name="WeChatScanBaseURL"
+                  value={inputs.WeChatScanBaseURL || ''}
+                  onChange={handleInputChange}
+                  label={t('setting_index.systemSettings.configureWeChatServer.scanBaseUrl')}
+                  placeholder={t('setting_index.systemSettings.configureWeChatServer.scanBaseUrlPlaceholder')}
                   disabled={loading}
                 />
               </FormControl>

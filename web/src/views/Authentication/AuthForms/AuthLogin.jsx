@@ -119,7 +119,13 @@ const LoginForm = ({ ...others }) => {
                   {t('login.useWechatLogin')}
                 </Button>
               </AnimateButton>
-              <WechatModal open={openWechat} handleClose={handleWechatClose} wechatLogin={wechatLogin} qrCode={siteInfo.wechat_qrcode} />
+              <WechatModal
+                open={openWechat}
+                handleClose={handleWechatClose}
+                wechatLogin={wechatLogin}
+                qrCode={siteInfo.wechat_qrcode}
+                wechatScanBase={siteInfo.wechat_scan_base}
+              />
             </Grid>
           )}
           {siteInfo.lark_login && (

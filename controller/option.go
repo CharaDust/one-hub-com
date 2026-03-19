@@ -83,6 +83,9 @@ func UpdateOption(c *gin.Context) {
 			})
 			return
 		}
+	case "WeChatScanBaseURL":
+		// wechat_scan_base 允许为空：为空则前端回退到「静态二维码 + 验证码」方式
+		// 这里不做强制校验
 	case "TurnstileCheckEnabled":
 		if option.Value == "true" && config.TurnstileSiteKey == "" {
 			c.JSON(http.StatusOK, gin.H{

@@ -30,6 +30,7 @@ const config = {
     version: '',
     wechat_login: false,
     wechat_qrcode: '',
+    wechat_scan_base: '',
     lark_login: false,
     lark_client_id: '',
     telegram_bot: '',

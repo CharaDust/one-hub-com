@@ -762,7 +762,13 @@ export default function Profile() {
           </SubCard>
         </CustomTabPanel>
       </MainCard>
-      <WechatModal open={openWechat} handleClose={handleWechatClose} wechatLogin={bindWeChat} qrCode={status.wechat_qrcode} />
+      <WechatModal
+                open={openWechat}
+                handleClose={handleWechatClose}
+                wechatLogin={bindWeChat}
+                qrCode={status.wechat_qrcode}
+                wechatScanBase={status.wechat_scan_base}
+              />
       <EmailModal
         open={openEmail}
         turnstileSiteKey={turnstileSiteKey}
