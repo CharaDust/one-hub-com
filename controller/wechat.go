@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
 	"one-api/common/config"
 	"one-api/model"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -34,19 +36,25 @@ func appendWechatDebugLog(hypothesisID, location, message string, data map[strin
 }
 
 func getWeChatIdByCode(code string) (string, error) {
+	trimmedToken := strings.TrimSpace(config.WeChatServerToken)
+	trimmedAddress := strings.TrimRight(strings.TrimSpace(config.WeChatServerAddress), "/")
+	requestURL := fmt.Sprintf("%s/api/wechat/user?code=%s&Authorization=%s", trimmedAddress, url.QueryEscape(code), url.QueryEscape(trimmedToken))
 	// #region agent log
 	appendWechatDebugLog("H1", "controller/wechat.go:getWeChatIdByCode:beforeRequest", "prepare bridge request", map[string]any{
-		"codeLen":           len(code),
-		"serverAddressSet":  config.WeChatServerAddress != "",
-		"serverAddressHead": func() string { if len(config.WeChatServerAddress) >= 8 { return config.WeChatServerAddress[:8] }; return config.WeChatServerAddress }(),
-		"tokenSet":          config.WeChatServerToken != "",
-		"tokenLen":          len(config.WeChatServerToken),
+		"codeLen":              len(code),
+		"serverAddressSet":     config.WeChatServerAddress != "",
+		"serverAddressHead":    func() string { if len(trimmedAddress) >= 8 { return trimmedAddress[:8] }; return trimmedAddress }(),
+		"tokenSet":             config.WeChatServerToken != "",
+		"tokenLen":             len(config.WeChatServerToken),
+		"tokenTrimmedLen":      len(trimmedToken),
+		"tokenWhitespaceFound": len(config.WeChatServerToken) != len(trimmedToken),
+		"queryAuthEnabled":     true,
 	})
 	// #endregion
 	if code == "" {
 		return "", errors.New("无效的参数")
 	}
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/wechat/user?code=%s", config.WeChatServerAddress, code), nil)
+	req, err := http.NewRequest("GET", requestURL, nil)
 	if err != nil {
 		// #region agent log
 		appendWechatDebugLog("H1", "controller/wechat.go:getWeChatIdByCode:newRequestErr", "create request failed", map[string]any{
@@ -55,7 +63,8 @@ func getWeChatIdByCode(code string) (string, error) {
 		// #endregion
 		return "", err
 	}
-	req.Header.Set("Authorization", config.WeChatServerToken)
+	// 同时使用 Header 与 Query 传递 token，兼容某些代理丢失 Authorization 头的场景
+	req.Header.Set("Authorization", trimmedToken)
 	client := http.Client{
 		Timeout: 5 * time.Second,
 	}
