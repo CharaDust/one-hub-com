@@ -76,26 +76,26 @@ func UpdateOption(c *gin.Context) {
 			return
 		}
 	case "WeChatAuthEnabled":
-		if option.Value == "true" && config.WeChatServerAddress == "" {
+		if option.Value == "true" && (config.WeChatServerAddress == "" || config.WeChatServerToken == "") {
 			c.JSON(http.StatusOK, gin.H{
 				"success": false,
-				"message": "无法启用微信登录，请先填入微信登录相关配置信息！",
+				"message": "无法启用微信登录，请先填入 WeChat Server 地址与访问凭证！",
 			})
 			return
 		}
 	case "WeChatCodeAuthEnabled":
-		if option.Value == "true" && config.WeChatServerAddress == "" {
+		if option.Value == "true" && (config.WeChatServerAddress == "" || config.WeChatServerToken == "") {
 			c.JSON(http.StatusOK, gin.H{
 				"success": false,
-				"message": "无法启用微信验证码登录，请先填入 WeChat Server 服务器地址！",
+				"message": "无法启用微信验证码登录，请先填入 WeChat Server 地址与访问凭证！",
 			})
 			return
 		}
 	case "WeChatScanAuthEnabled":
-		if option.Value == "true" && (config.WeChatServerAddress == "" || config.WeChatScanBaseURL == "") {
+		if option.Value == "true" && (config.WeChatServerAddress == "" || config.WeChatServerToken == "" || config.WeChatScanBaseURL == "") {
 			c.JSON(http.StatusOK, gin.H{
 				"success": false,
-				"message": "无法启用微信扫码登录，请先填入 WeChat Server 服务器地址与扫码页 Base URL！",
+				"message": "无法启用微信扫码登录，请先填入 WeChat Server 地址、访问凭证与扫码页 Base URL！",
 			})
 			return
 		}
