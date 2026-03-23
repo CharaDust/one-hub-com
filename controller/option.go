@@ -83,6 +83,22 @@ func UpdateOption(c *gin.Context) {
 			})
 			return
 		}
+	case "WeChatCodeAuthEnabled":
+		if option.Value == "true" && config.WeChatServerAddress == "" {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": "无法启用微信验证码登录，请先填入 WeChat Server 服务器地址！",
+			})
+			return
+		}
+	case "WeChatScanAuthEnabled":
+		if option.Value == "true" && (config.WeChatServerAddress == "" || config.WeChatScanBaseURL == "") {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": "无法启用微信扫码登录，请先填入 WeChat Server 服务器地址与扫码页 Base URL！",
+			})
+			return
+		}
 	case "WeChatScanBaseURL":
 		// wechat_scan_base 允许为空：为空则前端回退到「静态二维码 + 验证码」方式
 		// 这里不做强制校验

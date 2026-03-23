@@ -51,9 +51,9 @@ func getWeChatIdByCode(code string) (string, error) {
 }
 
 func WeChatAuth(c *gin.Context) {
-	if !config.WeChatAuthEnabled {
+	if !config.WeChatAuthEnabled && !config.WeChatCodeAuthEnabled && !config.WeChatScanAuthEnabled {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "管理员未开启通过微信登录以及注册",
+			"message": "管理员未开启微信登录以及注册",
 			"success": false,
 		})
 		return
@@ -113,9 +113,9 @@ func WeChatAuth(c *gin.Context) {
 }
 
 func WeChatBind(c *gin.Context) {
-	if !config.WeChatAuthEnabled {
+	if !config.WeChatAuthEnabled && !config.WeChatCodeAuthEnabled && !config.WeChatScanAuthEnabled {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "管理员未开启通过微信登录以及注册",
+			"message": "管理员未开启微信登录以及注册",
 			"success": false,
 		})
 		return

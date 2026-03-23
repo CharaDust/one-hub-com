@@ -514,6 +514,8 @@
     "useLarkLogin": "Log in using Feishu",
     "useOIDCLogin": "Use OIDC Login",
     "useWechatLogin": "Log in with Wechat",
+    "useWechatCodeLogin": "Log in with WeChat verification code",
+    "useWechatScanLogin": "Log in by scanning WeChat",
     "usernameOrEmail": "Username/Email",
     "usernameRequired": "Username/Email is required",
     "wechatLoginInfo": "Please use WeChat to scan the QR code to follow the official account and enter the \"verification code\" to obtain the verification code (valid within three minutes)",
@@ -1101,7 +1103,8 @@
         "registerEnabled": "Allow New User Registration (Disabling this will prevent any new registrations)",
         "title": "Configure Login and Register",
         "turnstileCheck": "Enable Turnstile User Verification",
-        "weChatAuth": "Allow Login & Register via WeChat"
+        "weChatCodeAuth": "Allow Login & Register via WeChat verification code",
+        "weChatScanAuth": "Allow Login & Register via WeChat scan"
       },
       "configureOIDCAuthorization": {
         "alert1": "Fill in the homepage link",
@@ -1161,6 +1164,32 @@
         "serverAddressPlaceholder": "e.g., https://yourdomain.com",
         "subTitle": "To support login and registration via WeChat.",
         "title": "Configure WeChat Server"
+      },
+      "configureWeChatCodeLogin": {
+        "title": "Configure WeChat Code Login",
+        "subTitle": "Configure WeChat verification-code login, ",
+        "learnLink": "Click here",
+        "learn": "to learn about WeChat Server",
+        "serverAddress": "WeChat Server Address",
+        "serverAddressPlaceholder": "e.g., https://yourdomain.com",
+        "accessToken": "WeChat Server Access Token",
+        "accessTokenPlaceholder": "Sensitive information will not be sent to the frontend",
+        "qrCodeImage": "WeChat Official Account QR Code Image Link",
+        "qrCodeImagePlaceholder": "Enter an image link",
+        "saveButton": "Save WeChat Code Login Settings"
+      },
+      "configureWeChatScanLogin": {
+        "title": "Configure WeChat Scan Login",
+        "subTitle": "Configure WeChat scan login, ",
+        "learnLink": "Click here",
+        "learn": "to learn about WeChat Server",
+        "serverAddress": "WeChat Server Address",
+        "serverAddressPlaceholder": "e.g., https://yourdomain.com",
+        "accessToken": "WeChat Server Access Token",
+        "accessTokenPlaceholder": "Sensitive information will not be sent to the frontend",
+        "scanBaseUrl": "WeChat scan page Base URL (demo mode)",
+        "scanBaseUrlPlaceholder": "e.g. http://localhost:3000",
+        "saveButton": "Save WeChat Scan Login Settings"
       },
       "generalSettings": {
         "serverAddress": "Server Address",

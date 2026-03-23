@@ -490,6 +490,8 @@
     "useLarkLogin": "フェイシュでログイン",
     "useOIDCLogin": "OIDC ログインを使用する",
     "useWechatLogin": "Wechatでログイン",
+    "useWechatCodeLogin": "WeChat認証コードでログイン",
+    "useWechatScanLogin": "WeChatスキャンでログイン",
     "usernameOrEmail": "ユーザー名/メール",
     "usernameRequired": "ユーザー名/メールは必須です",
     "wechatLoginInfo": "WeChatでQRコードをスキャンして公式アカウントをフォローし、「認証コード」を入力して認証コードを取得してください（3分以内有効）",
@@ -1086,7 +1088,8 @@
         "registerEnabled": "新規ユーザー登録を許可（これを無効にすると、新規登録はできません）",
         "title": "ログインと登録の設定",
         "turnstileCheck": "Turnstileユーザー検証を有効にする",
-        "weChatAuth": "WeChatでのログイン＆登録を許可"
+        "weChatCodeAuth": "WeChat認証コードでのログイン＆登録を許可",
+        "weChatScanAuth": "WeChatスキャンでのログイン＆登録を許可"
       },
       "configureOIDCAuthorization": {
         "alert1": "ホームページリンクを入力してください",
@@ -1144,6 +1147,32 @@
         "serverAddressPlaceholder": "例：https://yourdomain.com",
         "subTitle": "WeChat を利用したログインおよび登録をサポートするための設定です。",
         "title": "WeChat サーバーの設定"
+      },
+      "configureWeChatCodeLogin": {
+        "title": "WeChat認証コードログインの設定",
+        "subTitle": "WeChat認証コードログインを設定します。",
+        "learnLink": "こちらをクリックして",
+        "learn": "WeChat サーバーについて詳しく学ぶ",
+        "serverAddress": "WeChat サーバーのアドレス",
+        "serverAddressPlaceholder": "例：https://yourdomain.com",
+        "accessToken": "WeChat サーバーアクセス トークン",
+        "accessTokenPlaceholder": "敏感情報はフロントエンドに送信されません",
+        "qrCodeImage": "WeChat 公式アカウント QR コード画像リンク",
+        "qrCodeImagePlaceholder": "画像リンクを入力してください",
+        "saveButton": "WeChat認証コードログイン設定を保存"
+      },
+      "configureWeChatScanLogin": {
+        "title": "WeChatスキャンログインの設定",
+        "subTitle": "WeChatスキャンログインを設定します。",
+        "learnLink": "こちらをクリックして",
+        "learn": "WeChat サーバーについて詳しく学ぶ",
+        "serverAddress": "WeChat サーバーのアドレス",
+        "serverAddressPlaceholder": "例：https://yourdomain.com",
+        "accessToken": "WeChat サーバーアクセス トークン",
+        "accessTokenPlaceholder": "敏感情報はフロントエンドに送信されません",
+        "scanBaseUrl": "WeChat スキャンページ Base URL（demo方式）",
+        "scanBaseUrlPlaceholder": "例：http://localhost:3000",
+        "saveButton": "WeChatスキャンログイン設定を保存"
       },
       "generalSettings": {
         "serverAddress": "サーバーアドレス",

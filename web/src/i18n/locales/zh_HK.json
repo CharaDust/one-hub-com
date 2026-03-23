@@ -495,6 +495,8 @@
     "useLarkLogin": "使用飛書登錄",
     "useOIDCLogin": "使用 OIDC 登錄",
     "useWechatLogin": "使用 Wechat 登錄",
+    "useWechatCodeLogin": "使用 Wechat 驗證碼登錄",
+    "useWechatScanLogin": "使用 Wechat 掃碼登錄",
     "usernameOrEmail": "用戶名/電郵",
     "usernameRequired": "用戶名/電郵為必填項",
     "wechatLoginInfo": "請使用微信掃描二維碼關注公眾號，輸入「驗證碼」獲取驗證碼（有效期三分鐘）",
@@ -1087,7 +1089,8 @@
         "registerEnabled": "允許新用戶註冊（此項為否時，新用戶將無法以任何方式進行註冊）",
         "title": "配置登錄和註冊",
         "turnstileCheck": "啟用 Turnstile 用戶校驗",
-        "weChatAuth": "允許通過微信登錄 & 註冊",
+        "weChatCodeAuth": "允許通過微信驗證碼登錄 & 註冊",
+        "weChatScanAuth": "允許通過微信掃碼登錄 & 註冊",
         "gitHubOldIdClose": "關閉 GitHub 老 ID 登錄"
       },
       "configureOIDCAuthorization": {
@@ -1146,6 +1149,32 @@
         "serverAddressPlaceholder": "例如：https://yourdomain.com",
         "subTitle": "用以支持通過微信進行登錄註冊，",
         "title": "配置 WeChat 伺服器"
+      },
+      "configureWeChatCodeLogin": {
+        "title": "配置微信驗證碼登錄",
+        "subTitle": "用於配置微信驗證碼登錄，",
+        "learnLink": "點擊此處",
+        "learn": "了解 WeChat Server",
+        "serverAddress": "WeChat Server 伺服器地址",
+        "serverAddressPlaceholder": "例如：https://yourdomain.com",
+        "accessToken": "WeChat Server 訪問憑證",
+        "accessTokenPlaceholder": "敏感信息不會發送到前端顯示",
+        "qrCodeImage": "微信公眾號二維碼圖片鏈接",
+        "qrCodeImagePlaceholder": "輸入一個圖片鏈接",
+        "saveButton": "保存微信驗證碼登錄設置"
+      },
+      "configureWeChatScanLogin": {
+        "title": "配置微信掃碼登錄",
+        "subTitle": "用於配置微信掃碼登錄，",
+        "learnLink": "點擊此處",
+        "learn": "了解 WeChat Server",
+        "serverAddress": "WeChat Server 伺服器地址",
+        "serverAddressPlaceholder": "例如：https://yourdomain.com",
+        "accessToken": "WeChat Server 訪問憑證",
+        "accessTokenPlaceholder": "敏感信息不會發送到前端顯示",
+        "scanBaseUrl": "微信掃碼頁 Base URL（demo 方式）",
+        "scanBaseUrlPlaceholder": "例如：http://localhost:3000",
+        "saveButton": "保存微信掃碼登錄設置"
       },
       "generalSettings": {
         "serverAddress": "伺服器地址",

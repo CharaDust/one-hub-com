@@ -52,7 +52,8 @@ const SystemSetting = () => {
     SMTPToken: '',
     ServerAddress: '',
     Footer: '',
-    WeChatAuthEnabled: '',
+    WeChatCodeAuthEnabled: '',
+    WeChatScanAuthEnabled: '',
     WeChatServerAddress: '',
     WeChatServerToken: '',
     WeChatAccountQRCodeImageURL: '',
@@ -108,7 +109,8 @@ const SystemSetting = () => {
       case 'EmailVerificationEnabled':
       case 'GitHubOAuthEnabled':
       case 'GitHubOldIdCloseEnabled':
-      case 'WeChatAuthEnabled':
+      case 'WeChatCodeAuthEnabled':
+      case 'WeChatScanAuthEnabled':
       case 'LarkAuthEnabled':
       case 'OIDCAuthEnabled':
       case 'TurnstileCheckEnabled':
@@ -209,15 +211,24 @@ const SystemSetting = () => {
     await updateOption('EmailDomainWhitelist', inputs.EmailDomainWhitelist.join(','));
   };
 
-  const submitWeChat = async () => {
+  const submitWeChatCode = async () => {
+    if (originInputs['WeChatServerAddress'] !== inputs.WeChatServerAddress) {
+      await updateOption('WeChatServerAddress', removeTrailingSlash(inputs.WeChatServerAddress));
+    }
+    if (originInputs['WeChatAccountQRCodeImageURL'] !== inputs.WeChatAccountQRCodeImageURL) {
+      await updateOption('WeChatAccountQRCodeImageURL', inputs.WeChatAccountQRCodeImageURL);
+    }
+    if (originInputs['WeChatServerToken'] !== inputs.WeChatServerToken && inputs.WeChatServerToken !== '') {
+      await updateOption('WeChatServerToken', inputs.WeChatServerToken);
+    }
+  };
+
+  const submitWeChatScan = async () => {
     if (originInputs['WeChatServerAddress'] !== inputs.WeChatServerAddress) {
       await updateOption('WeChatServerAddress', removeTrailingSlash(inputs.WeChatServerAddress));
     }
     if (originInputs['WeChatScanBaseURL'] !== inputs.WeChatScanBaseURL) {
       await updateOption('WeChatScanBaseURL', removeTrailingSlash(inputs.WeChatScanBaseURL));
-    }
-    if (originInputs['WeChatAccountQRCodeImageURL'] !== inputs.WeChatAccountQRCodeImageURL) {
-      await updateOption('WeChatAccountQRCodeImageURL', inputs.WeChatAccountQRCodeImageURL);
     }
     if (originInputs['WeChatServerToken'] !== inputs.WeChatServerToken && inputs.WeChatServerToken !== '') {
       await updateOption('WeChatServerToken', inputs.WeChatServerToken);
@@ -343,8 +354,18 @@ const SystemSetting = () => {
             </Grid>
             <Grid xs={12} md={3}>
               <FormControlLabel
-                label={t('setting_index.systemSettings.configureLoginRegister.weChatAuth')}
-                control={<Checkbox checked={inputs.WeChatAuthEnabled === 'true'} onChange={handleInputChange} name="WeChatAuthEnabled" />}
+                label={t('setting_index.systemSettings.configureLoginRegister.weChatCodeAuth')}
+                control={
+                  <Checkbox checked={inputs.WeChatCodeAuthEnabled === 'true'} onChange={handleInputChange} name="WeChatCodeAuthEnabled" />
+                }
+              />
+            </Grid>
+            <Grid xs={12} md={3}>
+              <FormControlLabel
+                label={t('setting_index.systemSettings.configureLoginRegister.weChatScanAuth')}
+                control={
+                  <Checkbox checked={inputs.WeChatScanAuthEnabled === 'true'} onChange={handleInputChange} name="WeChatScanAuthEnabled" />
+                }
               />
             </Grid>
             <Grid xs={12} md={3}>
@@ -596,14 +617,14 @@ const SystemSetting = () => {
         </SubCard>
 
         <SubCard
-          title={t('setting_index.systemSettings.configureWeChatServer.title')}
+          title={t('setting_index.systemSettings.configureWeChatCodeLogin.title')}
           subTitle={
             <span>
-              {t('setting_index.systemSettings.configureWeChatServer.subTitle')}
+              {t('setting_index.systemSettings.configureWeChatCodeLogin.subTitle')}
               <a href="https://github.com/songquanpeng/wechat-server" target="_blank" rel="noopener noreferrer">
-                {t('setting_index.systemSettings.configureWeChatServer.learnLink')}
+                {t('setting_index.systemSettings.configureWeChatCodeLogin.learnLink')}
               </a>
-              {t('setting_index.systemSettings.configureWeChatServer.learn')}
+              {t('setting_index.systemSettings.configureWeChatCodeLogin.learn')}
             </span>
           }
         >
@@ -611,45 +632,29 @@ const SystemSetting = () => {
             <Grid xs={12} md={4}>
               <FormControl fullWidth>
                 <InputLabel htmlFor="WeChatServerAddress">
-                  {t('setting_index.systemSettings.configureWeChatServer.serverAddress')}
+                  {t('setting_index.systemSettings.configureWeChatCodeLogin.serverAddress')}
                 </InputLabel>
                 <OutlinedInput
                   id="WeChatServerAddress"
                   name="WeChatServerAddress"
                   value={inputs.WeChatServerAddress || ''}
                   onChange={handleInputChange}
-                  label={t('setting_index.systemSettings.configureWeChatServer.serverAddress')}
-                  placeholder={t('setting_index.systemSettings.configureWeChatServer.serverAddressPlaceholder')}
+                  label={t('setting_index.systemSettings.configureWeChatCodeLogin.serverAddress')}
+                  placeholder={t('setting_index.systemSettings.configureWeChatCodeLogin.serverAddressPlaceholder')}
                   disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12} md={4}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="WeChatServerToken">{t('setting_index.systemSettings.configureWeChatServer.accessToken')}</InputLabel>
+                <InputLabel htmlFor="WeChatServerToken">{t('setting_index.systemSettings.configureWeChatCodeLogin.accessToken')}</InputLabel>
                 <OutlinedInput
                   id="WeChatServerToken"
                   name="WeChatServerToken"
                   value={inputs.WeChatServerToken || ''}
                   onChange={handleInputChange}
-                  label={t('setting_index.systemSettings.configureWeChatServer.accessToken')}
-                  placeholder={t('setting_index.systemSettings.configureWeChatServer.accessTokenPlaceholder')}
-                  disabled={loading}
-                />
-              </FormControl>
-            </Grid>
-            <Grid xs={12} md={4}>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="WeChatScanBaseURL">
-                  {t('setting_index.systemSettings.configureWeChatServer.scanBaseUrl')}
-                </InputLabel>
-                <OutlinedInput
-                  id="WeChatScanBaseURL"
-                  name="WeChatScanBaseURL"
-                  value={inputs.WeChatScanBaseURL || ''}
-                  onChange={handleInputChange}
-                  label={t('setting_index.systemSettings.configureWeChatServer.scanBaseUrl')}
-                  placeholder={t('setting_index.systemSettings.configureWeChatServer.scanBaseUrlPlaceholder')}
+                  label={t('setting_index.systemSettings.configureWeChatCodeLogin.accessToken')}
+                  placeholder={t('setting_index.systemSettings.configureWeChatCodeLogin.accessTokenPlaceholder')}
                   disabled={loading}
                 />
               </FormControl>
@@ -657,22 +662,89 @@ const SystemSetting = () => {
             <Grid xs={12} md={4}>
               <FormControl fullWidth>
                 <InputLabel htmlFor="WeChatAccountQRCodeImageURL">
-                  {t('setting_index.systemSettings.configureWeChatServer.qrCodeImage')}
+                  {t('setting_index.systemSettings.configureWeChatCodeLogin.qrCodeImage')}
                 </InputLabel>
                 <OutlinedInput
                   id="WeChatAccountQRCodeImageURL"
                   name="WeChatAccountQRCodeImageURL"
                   value={inputs.WeChatAccountQRCodeImageURL || ''}
                   onChange={handleInputChange}
-                  label={t('setting_index.systemSettings.configureWeChatServer.qrCodeImage')}
-                  placeholder={t('setting_index.systemSettings.configureWeChatServer.qrCodeImagePlaceholder')}
+                  label={t('setting_index.systemSettings.configureWeChatCodeLogin.qrCodeImage')}
+                  placeholder={t('setting_index.systemSettings.configureWeChatCodeLogin.qrCodeImagePlaceholder')}
                   disabled={loading}
                 />
               </FormControl>
             </Grid>
             <Grid xs={12}>
-              <Button variant="contained" onClick={submitWeChat}>
-                {t('setting_index.systemSettings.configureWeChatServer.saveButton')}
+              <Button variant="contained" onClick={submitWeChatCode}>
+                {t('setting_index.systemSettings.configureWeChatCodeLogin.saveButton')}
+              </Button>
+            </Grid>
+          </Grid>
+        </SubCard>
+
+        <SubCard
+          title={t('setting_index.systemSettings.configureWeChatScanLogin.title')}
+          subTitle={
+            <span>
+              {t('setting_index.systemSettings.configureWeChatScanLogin.subTitle')}
+              <a href="https://github.com/songquanpeng/wechat-server" target="_blank" rel="noopener noreferrer">
+                {t('setting_index.systemSettings.configureWeChatScanLogin.learnLink')}
+              </a>
+              {t('setting_index.systemSettings.configureWeChatScanLogin.learn')}
+            </span>
+          }
+        >
+          <Grid container spacing={{ xs: 3, sm: 2, md: 4 }}>
+            <Grid xs={12} md={4}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="WeChatServerAddress">
+                  {t('setting_index.systemSettings.configureWeChatScanLogin.serverAddress')}
+                </InputLabel>
+                <OutlinedInput
+                  id="WeChatServerAddress"
+                  name="WeChatServerAddress"
+                  value={inputs.WeChatServerAddress || ''}
+                  onChange={handleInputChange}
+                  label={t('setting_index.systemSettings.configureWeChatScanLogin.serverAddress')}
+                  placeholder={t('setting_index.systemSettings.configureWeChatScanLogin.serverAddressPlaceholder')}
+                  disabled={loading}
+                />
+              </FormControl>
+            </Grid>
+            <Grid xs={12} md={4}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="WeChatServerToken">{t('setting_index.systemSettings.configureWeChatScanLogin.accessToken')}</InputLabel>
+                <OutlinedInput
+                  id="WeChatServerToken"
+                  name="WeChatServerToken"
+                  value={inputs.WeChatServerToken || ''}
+                  onChange={handleInputChange}
+                  label={t('setting_index.systemSettings.configureWeChatScanLogin.accessToken')}
+                  placeholder={t('setting_index.systemSettings.configureWeChatScanLogin.accessTokenPlaceholder')}
+                  disabled={loading}
+                />
+              </FormControl>
+            </Grid>
+            <Grid xs={12} md={4}>
+              <FormControl fullWidth>
+                <InputLabel htmlFor="WeChatScanBaseURL">
+                  {t('setting_index.systemSettings.configureWeChatScanLogin.scanBaseUrl')}
+                </InputLabel>
+                <OutlinedInput
+                  id="WeChatScanBaseURL"
+                  name="WeChatScanBaseURL"
+                  value={inputs.WeChatScanBaseURL || ''}
+                  onChange={handleInputChange}
+                  label={t('setting_index.systemSettings.configureWeChatScanLogin.scanBaseUrl')}
+                  placeholder={t('setting_index.systemSettings.configureWeChatScanLogin.scanBaseUrlPlaceholder')}
+                  disabled={loading}
+                />
+              </FormControl>
+            </Grid>
+            <Grid xs={12}>
+              <Button variant="contained" onClick={submitWeChatScan}>
+                {t('setting_index.systemSettings.configureWeChatScanLogin.saveButton')}
               </Button>
             </Grid>
           </Grid>

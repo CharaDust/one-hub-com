@@ -31,6 +31,8 @@ func InitOptionMap() {
 	config.GlobalOption.RegisterBool("EmailVerificationEnabled", &config.EmailVerificationEnabled)
 	config.GlobalOption.RegisterBool("GitHubOAuthEnabled", &config.GitHubOAuthEnabled)
 	config.GlobalOption.RegisterBool("WeChatAuthEnabled", &config.WeChatAuthEnabled)
+	config.GlobalOption.RegisterBool("WeChatCodeAuthEnabled", &config.WeChatCodeAuthEnabled)
+	config.GlobalOption.RegisterBool("WeChatScanAuthEnabled", &config.WeChatScanAuthEnabled)
 	config.GlobalOption.RegisterBool("LarkAuthEnabled", &config.LarkAuthEnabled)
 	config.GlobalOption.RegisterBool("OIDCAuthEnabled", &config.OIDCAuthEnabled)
 	config.GlobalOption.RegisterBool("TurnstileCheckEnabled", &config.TurnstileCheckEnabled)

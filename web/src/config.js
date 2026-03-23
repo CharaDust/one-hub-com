@@ -29,6 +29,8 @@ const config = {
     turnstile_site_key: '',
     version: '',
     wechat_login: false,
+    wechat_code_login: false,
+    wechat_scan_login: false,
     wechat_qrcode: '',
     wechat_scan_base: '',
     lark_login: false,

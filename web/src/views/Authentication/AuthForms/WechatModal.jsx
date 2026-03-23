@@ -1,5 +1,4 @@
 // WechatModal.js
-// 支持两种方式：1）wechat_scan_base 时 iframe 内嵌扫码页（对接 wechat-login-demo / wechat-sso-bridge）；2）否则静态二维码 + 验证码输入
 import PropTypes from 'prop-types';
 import React, { useEffect, useCallback } from 'react';
 import { Dialog, DialogTitle, DialogContent, TextField, Button, Typography, Grid } from '@mui/material';
@@ -15,9 +14,9 @@ const getValidationSchema = (t) =>
     code: Yup.string().required(t('login.codeRequired'))
   });
 
-const WechatModal = ({ open, handleClose, wechatLogin, qrCode, wechatScanBase }) => {
+const WechatModal = ({ open, handleClose, wechatLogin, qrCode, wechatScanBase, mode }) => {
   const { t } = useTranslation();
-  const useScanIframe = Boolean(wechatScanBase && wechatScanBase.trim());
+  const useScanIframe = mode === 'scan';
 
   const handleMessage = useCallback(
     (event) => {
@@ -118,5 +117,6 @@ WechatModal.propTypes = {
   handleClose: PropTypes.func,
   wechatLogin: PropTypes.func,
   qrCode: PropTypes.string,
-  wechatScanBase: PropTypes.string
+  wechatScanBase: PropTypes.string,
+  mode: PropTypes.oneOf(['code', 'scan'])
 };

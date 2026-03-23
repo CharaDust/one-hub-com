@@ -478,7 +478,7 @@ export default function Profile() {
                   </Button>
                 )}
               </ListItem>
-              {status.wechat_login && (
+              {(status.wechat_code_login || status.wechat_scan_login) && (
                 <ListItem divider>
                   <ListItemAvatar>
                     <Avatar sx={{ bgcolor: '#07C160', color: '#fff' }}>
@@ -768,6 +768,7 @@ export default function Profile() {
                 wechatLogin={bindWeChat}
                 qrCode={status.wechat_qrcode}
                 wechatScanBase={status.wechat_scan_base}
+                mode={status.wechat_scan_login ? 'scan' : 'code'}
               />
       <EmailModal
         open={openEmail}
