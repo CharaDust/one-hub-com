@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"crypto/sha256"
 	"encoding/json"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"log"
@@ -35,10 +37,16 @@ func appendWechatDebugLog(hypothesisID, location, message string, data map[strin
 	log.Printf("[WECHAT_DEBUG] %s", string(b))
 }
 
+func tokenFingerprint(token string) string {
+	sum := sha256.Sum256([]byte(token))
+	return hex.EncodeToString(sum[:])[:12]
+}
+
 func getWeChatIdByCode(code string) (string, error) {
 	trimmedToken := strings.TrimSpace(config.WeChatServerToken)
 	trimmedAddress := strings.TrimRight(strings.TrimSpace(config.WeChatServerAddress), "/")
 	requestURL := fmt.Sprintf("%s/api/wechat/user?code=%s&Authorization=%s", trimmedAddress, url.QueryEscape(code), url.QueryEscape(trimmedToken))
+	parsedURL, _ := url.Parse(requestURL)
 	// #region agent log
 	appendWechatDebugLog("H1", "controller/wechat.go:getWeChatIdByCode:beforeRequest", "prepare bridge request", map[string]any{
 		"codeLen":              len(code),
@@ -48,7 +56,10 @@ func getWeChatIdByCode(code string) (string, error) {
 		"tokenLen":             len(config.WeChatServerToken),
 		"tokenTrimmedLen":      len(trimmedToken),
 		"tokenWhitespaceFound": len(config.WeChatServerToken) != len(trimmedToken),
+		"tokenFingerprint":     tokenFingerprint(trimmedToken),
 		"queryAuthEnabled":     true,
+		"requestHost":          parsedURL.Host,
+		"requestPath":          parsedURL.Path,
 	})
 	// #endregion
 	if code == "" {
