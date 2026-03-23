@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"one-api/common/logger"
 	"sort"
 	"strings"
 	"time"
@@ -126,6 +127,8 @@ func (c *Client) UnifiedOrder(req *UnifiedOrderRequest) (*UnifiedOrderData, erro
 
 	baseURL := strings.TrimSuffix(c.PayDomain, "/")
 	url := baseURL + UnifiedOrderPath
+	logger.SysLog(fmt.Sprintf("[jeepay unifiedOrder] request POST %s body=%s", url, string(body)))
+
 	httpReq, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(body))
 	if err != nil {
 		return nil, err
@@ -134,14 +137,18 @@ func (c *Client) UnifiedOrder(req *UnifiedOrderRequest) (*UnifiedOrderData, erro
 
 	resp, err := http.DefaultClient.Do(httpReq)
 	if err != nil {
+		logger.SysError(fmt.Sprintf("[jeepay unifiedOrder] http do error: %v", err))
 		return nil, err
 	}
 	defer resp.Body.Close()
 
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
+		logger.SysError(fmt.Sprintf("[jeepay unifiedOrder] read body error: %v", err))
 		return nil, err
 	}
+	logger.SysLog(fmt.Sprintf("[jeepay unifiedOrder] response status=%d body=%s", resp.StatusCode, string(respBody)))
+
 	if resp.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("jeepay unifiedOrder http %d: %s", resp.StatusCode, string(respBody))
 	}

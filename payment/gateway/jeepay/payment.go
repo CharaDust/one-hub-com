@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"one-api/common/config"
 	"one-api/common/logger"
 	"one-api/model"
@@ -40,8 +41,18 @@ func (j *Jeepay) Pay(cfg *types.PayConfig, gatewayConfig string) (*types.PayRequ
 
 	channelExtra := ""
 	switch client.WayCode {
+	case WayCodeWebCashier, WayCodeChannelCashier:
+		// 计全 Web/聚合收银台在 channelExtra 中需传 mnt，否则收银台页提示「参数mnt必填」
+		extra := map[string]string{
+			"payDataType": "payUrl",
+			"mnt":         client.CashierMntValue(),
+		}
+		b, err := json.Marshal(extra)
+		if err != nil {
+			return nil, err
+		}
+		channelExtra = string(b)
 	case WayCodeAliPC, WayCodeAliWAP:
-		// 请求返回 payUrl 便于前端跳转
 		channelExtra = `{"payDataType":"payUrl"}`
 	case WayCodeAliQR, WayCodeWxNative, WayCodeQRCashier:
 		// 二维码类可要 codeUrl 或 codeImgUrl
@@ -72,6 +83,9 @@ func (j *Jeepay) Pay(cfg *types.PayConfig, gatewayConfig string) (*types.PayRequ
 
 	// payDataType: payUrl / form / codeUrl / codeImgUrl（计全可能返回小写如 payurl）
 	payURL := strings.TrimSpace(data.PayData)
+	if client.WayCode == WayCodeWebCashier || client.WayCode == WayCodeChannelCashier {
+		payURL = appendCashierMntToPayURL(payURL, client.CashierMntValue())
+	}
 	dt := strings.ToLower(strings.TrimSpace(data.PayDataType))
 	switch dt {
 	case "payurl", "form":
@@ -93,6 +107,23 @@ func (j *Jeepay) Pay(cfg *types.PayConfig, gatewayConfig string) (*types.PayRequ
 	default:
 		return nil, fmt.Errorf("jeepay unsupported payDataType: %s", data.PayDataType)
 	}
+}
+
+// appendCashierMntToPayURL 若收银台跳转 URL 缺少 mnt 查询参数则补上（与 channelExtra 中的 mnt 一致）
+func appendCashierMntToPayURL(rawURL, mnt string) string {
+	if rawURL == "" || mnt == "" {
+		return rawURL
+	}
+	u, err := url.Parse(rawURL)
+	if err != nil {
+		return rawURL
+	}
+	q := u.Query()
+	if q.Get("mnt") == "" {
+		q.Set("mnt", mnt)
+		u.RawQuery = q.Encode()
+	}
+	return u.String()
 }
 
 func (j *Jeepay) HandleCallback(c *gin.Context, gatewayConfig string) (*types.PayNotify, error) {
