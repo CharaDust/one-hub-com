@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"one-api/common/config"
 	"one-api/model"
-	"os"
 	"strconv"
 	"time"
 
@@ -29,16 +29,8 @@ func appendWechatDebugLog(hypothesisID, location, message string, data map[strin
 		"data":         data,
 		"timestamp":    time.Now().UnixMilli(),
 	}
-	b, err := json.Marshal(payload)
-	if err != nil {
-		return
-	}
-	f, err := os.OpenFile("/Users/richardki/Documents/项目/WebServer/one-hub-com/.cursor/debug.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		return
-	}
-	defer f.Close()
-	_, _ = f.Write(append(b, '\n'))
+	b, _ := json.Marshal(payload)
+	log.Printf("[WECHAT_DEBUG] %s", string(b))
 }
 
 func getWeChatIdByCode(code string) (string, error) {
