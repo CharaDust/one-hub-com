@@ -3,19 +3,19 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { GitHub } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 
-const BaseIndex = () => {
+const BaseIndex = ({ pureHomeModeOnHome = false }) => {
   const { t } = useTranslation();
   return (
     <Box
       sx={{
-        minHeight: 'calc(100vh - 136px)',
+        minHeight: pureHomeModeOnHome ? '100vh' : 'calc(100vh - 136px)',
         backgroundImage: 'linear-gradient(to right, #ff9966, #ff5e62)',
         color: 'white',
         p: 4
       }}
     >
       <Container maxWidth="lg">
-        <Grid container columns={12} wrap="nowrap" alignItems="center" sx={{ minHeight: 'calc(100vh - 230px)' }}>
+        <Grid container columns={12} wrap="nowrap" alignItems="center" sx={{ minHeight: pureHomeModeOnHome ? '100vh' : 'calc(100vh - 230px)' }}>
           <Grid md={7} lg={6}>
             <Stack spacing={3}>
               <Typography variant="h1" sx={{ fontSize: '4rem', color: '#fff', lineHeight: 1.5 }}>

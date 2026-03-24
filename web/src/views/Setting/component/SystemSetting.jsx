@@ -39,6 +39,7 @@ const SystemSetting = () => {
     LarkClientId: '',
     LarkClientSecret: '',
     OIDCAuthEnabled: '',
+    WebAuthnEnabled: '',
     OIDCClientId: '',
     OIDCClientSecret: '',
     OIDCIssuer: '',
@@ -114,6 +115,7 @@ const SystemSetting = () => {
       case 'WeChatScanAuthEnabled':
       case 'LarkAuthEnabled':
       case 'OIDCAuthEnabled':
+      case 'WebAuthnEnabled':
       case 'TurnstileCheckEnabled':
       case 'EmailDomainRestrictionEnabled':
       case 'RegisterEnabled':
@@ -386,6 +388,12 @@ const SystemSetting = () => {
               <FormControlLabel
                 label={t('setting_index.systemSettings.configureLoginRegister.oidcAuth')}
                 control={<Checkbox checked={inputs.OIDCAuthEnabled === 'true'} onChange={handleInputChange} name="OIDCAuthEnabled" />}
+              />
+            </Grid>
+            <Grid xs={12} md={3}>
+              <FormControlLabel
+                label={t('setting_index.systemSettings.configureLoginRegister.webAuthn')}
+                control={<Checkbox checked={inputs.WebAuthnEnabled === 'true'} onChange={handleInputChange} name="WebAuthnEnabled" />}
               />
             </Grid>
             <Grid xs={12} md={3}>

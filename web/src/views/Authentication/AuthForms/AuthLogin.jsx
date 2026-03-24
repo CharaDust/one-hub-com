@@ -109,7 +109,7 @@ const LoginForm = ({ ...others }) => {
               </AnimateButton>
             </Grid>
           )}
-          {(siteInfo.wechat_code_login || siteInfo.wechat_login) && (
+          {siteInfo.wechat_code_login && (
             <Grid item xs={12}>
               <AnimateButton>
                 <Button
@@ -342,32 +342,34 @@ const LoginForm = ({ ...others }) => {
               </AnimateButton>
             </Box>
 
-            <Box sx={{ mt: 2 }}>
-              <AnimateButton>
-                <Button
-                  disableElevation
-                  fullWidth
-                  onClick={() =>
-                    onWebAuthnClicked(
-                      values.username,
-                      (msg) => setErrors({ submit: msg }),
-                      (msg) => setStatus({ success: true, message: msg }),
-                      () => {}
-                    )
-                  }
-                  size="large"
-                  variant="outlined"
-                  sx={{
-                    ...theme.typography.LoginButton
-                  }}
-                >
-                  <Box sx={{ mr: { xs: 1, sm: 2, width: 20 }, display: 'flex', alignItems: 'center' }}>
-                    <img src={Webauthn} alt="WebAuthn" width={25} height={25} style={{ marginRight: matchDownSM ? 8 : 16 }} />
-                  </Box>
-                  WebAuthn
-                </Button>
-              </AnimateButton>
-            </Box>
+            {siteInfo.webauthn_auth && (
+              <Box sx={{ mt: 2 }}>
+                <AnimateButton>
+                  <Button
+                    disableElevation
+                    fullWidth
+                    onClick={() =>
+                      onWebAuthnClicked(
+                        values.username,
+                        (msg) => setErrors({ submit: msg }),
+                        (msg) => setStatus({ success: true, message: msg }),
+                        () => {}
+                      )
+                    }
+                    size="large"
+                    variant="outlined"
+                    sx={{
+                      ...theme.typography.LoginButton
+                    }}
+                  >
+                    <Box sx={{ mr: { xs: 1, sm: 2, width: 20 }, display: 'flex', alignItems: 'center' }}>
+                      <img src={Webauthn} alt="WebAuthn" width={25} height={25} style={{ marginRight: matchDownSM ? 8 : 16 }} />
+                    </Box>
+                    WebAuthn
+                  </Button>
+                </AnimateButton>
+              </Box>
+            )}
           </form>
         )}
       </Formik>

@@ -186,6 +186,9 @@ func (j *Jeepay) HandleCallback(c *gin.Context, gatewayConfig string) (*types.Pa
 func parseNotifyParams(c *gin.Context) (map[string]string, error) {
 	params := make(map[string]string)
 	ct := c.GetHeader("Content-Type")
+	// #region agent log
+	logger.SysLog(fmt.Sprintf("jeepay notify parse start, method=%s, contentType=%s, rawQuery=%s", c.Request.Method, ct, c.Request.URL.RawQuery))
+	// #endregion
 	if strings.Contains(ct, "application/json") {
 		body, err := io.ReadAll(c.Request.Body)
 		if err != nil {
@@ -212,16 +215,23 @@ func parseNotifyParams(c *gin.Context) (map[string]string, error) {
 				params[k] = fmt.Sprint(v)
 			}
 		}
+		// #region agent log
+		logger.SysLog(fmt.Sprintf("jeepay notify parsed from json, fields=%d", len(params)))
+		// #endregion
 		return params, nil
 	}
 	if err := c.Request.ParseForm(); err != nil {
 		return nil, err
 	}
-	for k, v := range c.Request.PostForm {
+	// ParseForm 后使用 Form（而非 PostForm），可同时覆盖 GET query 与 POST form。
+	for k, v := range c.Request.Form {
 		if len(v) > 0 {
 			params[k] = v[0]
 		}
 	}
+	// #region agent log
+	logger.SysLog(fmt.Sprintf("jeepay notify parsed from form/query, fields=%d, hasSign=%t, hasMchOrderNo=%t", len(params), params["sign"] != "", params["mchOrderNo"] != ""))
+	// #endregion
 	return params, nil
 }
 

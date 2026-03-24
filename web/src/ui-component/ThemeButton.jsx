@@ -8,8 +8,13 @@ export default function ThemeButton() {
   const dispatch = useDispatch();
 
   const defaultTheme = useSelector((state) => state.customization.theme);
+  const siteInfo = useSelector((state) => state.siteInfo);
 
   const theme = useTheme();
+
+  if (siteInfo?.disable_dark_mode_toggle) {
+    return null;
+  }
 
   return (
     <Box

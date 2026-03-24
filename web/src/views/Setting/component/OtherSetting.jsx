@@ -8,6 +8,8 @@ import {
   Button,
   Alert,
   TextField,
+  Switch,
+  FormControlLabel,
   Dialog,
   DialogTitle,
   DialogActions,
@@ -31,7 +33,9 @@ const OtherSetting = () => {
     SystemName: '',
     Logo: '',
     HomePageContent: '',
-    AnalyticsCode: ''
+    AnalyticsCode: '',
+    PureHomeMode: false,
+    DisableDarkModeToggle: false
   });
   let [loading, setLoading] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -49,7 +53,11 @@ const OtherSetting = () => {
         let newInputs = {};
         data.forEach((item) => {
           if (item.key in inputs) {
-            newInputs[item.key] = item.value;
+            if (item.key === 'PureHomeMode' || item.key === 'DisableDarkModeToggle') {
+              newInputs[item.key] = item.value === true || item.value === 'true';
+            } else {
+              newInputs[item.key] = item.value;
+            }
           }
         });
         setInputs(newInputs);
@@ -68,10 +76,11 @@ const OtherSetting = () => {
 
   const updateOption = async (key, value) => {
     setLoading(true);
+    const normalizedValue = typeof value === 'boolean' ? String(value) : value;
     try {
       const res = await API.put('/api/option/', {
         key,
-        value
+        value: normalizedValue
       });
       const { success, message } = res.data;
       if (success) {
@@ -88,7 +97,10 @@ const OtherSetting = () => {
   };
 
   const handleInputChange = async (event) => {
-    let { name, value } = event.target;
+    let { name, value, type, checked } = event.target;
+    if (type === 'checkbox') {
+      value = checked;
+    }
     setInputs((inputs) => ({ ...inputs, [name]: value }));
   };
 
@@ -256,6 +268,28 @@ const OtherSetting = () => {
             <Grid xs={12}>
               <Button variant="contained" onClick={() => submitOption('HomePageContent')}>
                 {t('setting_index.otherSettings.customSettings.saveHomePageContent')}
+              </Button>
+            </Grid>
+            <Grid xs={12}>
+              <FormControlLabel
+                control={<Switch name="PureHomeMode" checked={!!inputs.PureHomeMode} onChange={handleInputChange} />}
+                label="纯净首页模式（仅首页生效）"
+              />
+            </Grid>
+            <Grid xs={12}>
+              <Button variant="contained" onClick={() => submitOption('PureHomeMode')}>
+                保存纯净首页模式
+              </Button>
+            </Grid>
+            <Grid xs={12}>
+              <FormControlLabel
+                control={<Switch name="DisableDarkModeToggle" checked={!!inputs.DisableDarkModeToggle} onChange={handleInputChange} />}
+                label="禁用黑暗模式调节（全站生效）"
+              />
+            </Grid>
+            <Grid xs={12}>
+              <Button variant="contained" onClick={() => submitOption('DisableDarkModeToggle')}>
+                保存禁用黑暗模式调节
               </Button>
             </Grid>
             <Grid xs={12}>

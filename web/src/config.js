@@ -18,6 +18,7 @@ const config = {
     github_client_id: '',
     github_oauth: false,
     oidc_auth: false,
+    webauthn_auth: true,
     logo: '',
     quota_per_unit: 500000,
     server_address: '',

@@ -1089,7 +1089,8 @@
         "title": "ログインと登録の設定",
         "turnstileCheck": "Turnstileユーザー検証を有効にする",
         "weChatCodeAuth": "WeChat認証コードでのログイン＆登録を許可",
-        "weChatScanAuth": "WeChatスキャンでのログイン＆登録を許可"
+        "weChatScanAuth": "WeChatスキャンでのログイン＆登録を許可",
+        "webAuthn": "WebAuthn でのログインを許可"
       },
       "configureOIDCAuthorization": {
         "alert1": "ホームページリンクを入力してください",

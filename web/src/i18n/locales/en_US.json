@@ -1104,7 +1104,8 @@
         "title": "Configure Login and Register",
         "turnstileCheck": "Enable Turnstile User Verification",
         "weChatCodeAuth": "Allow Login & Register via WeChat verification code",
-        "weChatScanAuth": "Allow Login & Register via WeChat scan"
+        "weChatScanAuth": "Allow Login & Register via WeChat scan",
+        "webAuthn": "Allow Login via WebAuthn"
       },
       "configureOIDCAuthorization": {
         "alert1": "Fill in the homepage link",

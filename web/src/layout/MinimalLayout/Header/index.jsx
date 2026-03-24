@@ -30,12 +30,13 @@ import { useTranslation } from 'react-i18next';
 
 // ==============================|| MINIMAL NAVBAR / HEADER ||============================== //
 
-const Header = () => {
+const Header = ({ pureHomeModeOnHome = false }) => {
   const theme = useTheme();
   const { pathname } = useLocation();
   const account = useSelector((state) => state.account);
   const [open, setOpen] = useState(null);
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const collapseToMenu = isMobile || pureHomeModeOnHome;
   const { t } = useTranslation();
   const siteInfo = useSelector((state) => state.siteInfo);
   const handleOpenMenu = (event) => {
@@ -46,6 +47,240 @@ const Header = () => {
     setOpen(null);
   };
 
+  if (pureHomeModeOnHome) {
+    return (
+      <>
+        <IconButton
+          onClick={handleOpenMenu}
+          sx={{
+            color: theme.palette.text.primary,
+            borderRadius: '12px',
+            padding: '8px',
+            backgroundColor: theme.palette.mode === 'dark' ? '#000' : '#fff',
+            boxShadow:
+              theme.palette.mode === 'dark'
+                ? '0 8px 24px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.4)'
+                : '0 8px 24px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.1)',
+            position: 'fixed',
+            top: 16,
+            right: 24,
+            zIndex: theme.zIndex.drawer + 3,
+            '&:hover': {
+              backgroundColor: theme.palette.mode === 'dark' ? '#111' : '#f8f9fa'
+            }
+          }}
+        >
+          <IconMenu2 stroke={1.5} size="1.3rem" />
+        </IconButton>
+
+        <Popper
+          open={!!open}
+          anchorEl={open}
+          transition
+          disablePortal
+          placement="bottom-end"
+          popperOptions={{
+            modifiers: [
+              {
+                name: 'offset',
+                options: {
+                  offset: [0, 14]
+                }
+              }
+            ]
+          }}
+          style={{ zIndex: theme.zIndex.drawer + 2 }}
+        >
+          {({ TransitionProps }) => (
+            <Transitions in={open} {...TransitionProps}>
+              <ClickAwayListener onClickAway={handleCloseMenu}>
+                <Paper
+                  sx={{
+                    width: { xs: '30vw', sm: '320px' },
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                    boxShadow: theme.shadows[8],
+                    textAlign: 'center'
+                  }}
+                >
+                  <MainCard border={false} elevation={0} content={false} boxShadow>
+                    <List
+                      component="nav"
+                      sx={{
+                        width: '100%',
+                        backgroundColor: theme.palette.background.paper,
+                        py: 1,
+                        '& .MuiListItemButton-root': {
+                          py: 0.75,
+                          px: 2.5,
+                          '&:hover': {
+                            backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.04)'
+                          }
+                        },
+                        '& .Mui-selected': {
+                          backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.05)',
+                          '&:hover': {
+                            backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.08)'
+                          }
+                        }
+                      }}
+                      onClick={handleCloseMenu}
+                    >
+                      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, py: 1.5 }}>
+                        <NoticeButton />
+                        <ThemeButton />
+                      </Box>
+                      <Divider sx={{ my: 1 }} />
+                      <ListItemButton component={Link} to="/" selected={pathname === '/'}>
+                        <ListItemText
+                          primary={
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                fontWeight: pathname === '/' ? 500 : 400,
+                                textAlign: 'center',
+                                color: pathname === '/' ? theme.palette.primary.main : theme.palette.text.primary
+                              }}
+                            >
+                              {t('menu.home')}
+                            </Typography>
+                          }
+                        />
+                      </ListItemButton>
+
+                      {account.user && (
+                        <ListItemButton component={Link} to="/playground" selected={pathname === '/playground'}>
+                          <ListItemText
+                            primary={
+                              <Typography
+                                variant="body1"
+                                sx={{
+                                  fontWeight: pathname === '/playground' ? 500 : 400,
+                                  textAlign: 'center',
+                                  color: pathname === '/playground' ? theme.palette.primary.main : theme.palette.text.primary
+                                }}
+                              >
+                                {t('playground')}
+                              </Typography>
+                            }
+                          />
+                        </ListItemButton>
+                      )}
+
+                      <ListItemButton component={Link} to="/price" selected={pathname === '/price'}>
+                        <ListItemText
+                          primary={
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                fontWeight: pathname === '/price' ? 500 : 400,
+                                textAlign: 'center',
+                                color: pathname === '/price' ? theme.palette.primary.main : theme.palette.text.primary
+                              }}
+                            >
+                              {t('price')}
+                            </Typography>
+                          }
+                        />
+                      </ListItemButton>
+
+                      <ListItemButton component={Link} to="/about" selected={pathname === '/about'}>
+                        <ListItemText
+                          primary={
+                            <Typography
+                              variant="body1"
+                              sx={{
+                                fontWeight: pathname === '/about' ? 500 : 400,
+                                textAlign: 'center',
+                                color: pathname === '/about' ? theme.palette.primary.main : theme.palette.text.primary
+                              }}
+                            >
+                              {t('menu.about')}
+                            </Typography>
+                          }
+                        />
+                      </ListItemButton>
+                      {siteInfo.UptimeEnabled && (
+                        <ListItemButton component="a" href={siteInfo.UptimeDomain} target="_blank" rel="noopener noreferrer">
+                          <ListItemText
+                            primary={
+                              <Typography
+                                variant="body1"
+                                sx={{
+                                  fontWeight: pathname === '/status' ? 500 : 400,
+                                  textAlign: 'center',
+                                  color: pathname === '/status' ? theme.palette.primary.main : theme.palette.text.primary
+                                }}
+                              >
+                                {t('menu.status')}
+                              </Typography>
+                            }
+                          />
+                        </ListItemButton>
+                      )}
+                      <Divider sx={{ my: 1 }} />
+                      {account.user ? (
+                        <ListItemButton
+                          component={Link}
+                          to="/panel"
+                          sx={{
+                            fontWeight: pathname === '/panel' ? 500 : 400,
+                            color: pathname === '/panel' ? theme.palette.primary.main : theme.palette.text.primary
+                          }}
+                        >
+                          <ListItemText
+                            primary={
+                              <Typography
+                                color="primary"
+                                variant="body1"
+                                sx={{
+                                  fontWeight: 600,
+                                  textAlign: 'center',
+                                  transition: 'color 0.2s ease'
+                                }}
+                              >
+                                {t('menu.console')}
+                              </Typography>
+                            }
+                          />
+                        </ListItemButton>
+                      ) : (
+                        <ListItemButton
+                          component={Link}
+                          to="/login"
+                          sx={{
+                            fontWeight: pathname === '/login' ? 500 : 400,
+                            color: pathname === '/login' ? theme.palette.primary.main : theme.palette.text.primary
+                          }}
+                        >
+                          <ListItemText
+                            primary={
+                              <Typography
+                                color="primary"
+                                variant="body1"
+                                sx={{
+                                  fontWeight: 600,
+                                  textAlign: 'center',
+                                  transition: 'color 0.2s ease'
+                                }}
+                              >
+                                {t('menu.login')}
+                              </Typography>
+                            }
+                          />
+                        </ListItemButton>
+                      )}
+                    </List>
+                  </MainCard>
+                </Paper>
+              </ClickAwayListener>
+            </Transitions>
+          )}
+        </Popper>
+      </>
+    );
+  }
+
   return (
     <>
       <Box
@@ -53,6 +288,7 @@ const Header = () => {
           width: 228,
           display: 'flex',
           alignItems: 'center',
+          visibility: pureHomeModeOnHome ? 'hidden' : 'visible',
           [theme.breakpoints.down('md')]: {
             width: 'auto'
           }
@@ -65,20 +301,29 @@ const Header = () => {
 
       <Box sx={{ flexGrow: 1 }} />
       <Stack spacing={{ xs: 0.5, sm: 1, md: 2 }} direction="row" justifyContent="center" alignItems="center">
-        {isMobile ? (
+        {collapseToMenu ? (
           <>
-            <NoticeButton sx={{ color: theme.palette.text.primary, mr: 1 }} />
-            <ThemeButton sx={{ color: theme.palette.text.primary, mr: 1 }} />
-            {/* <I18nButton sx={{ color: theme.palette.text.primary, mr: 1 }} /> */}
             <IconButton
               onClick={handleOpenMenu}
               sx={{
                 color: theme.palette.text.primary,
                 borderRadius: '12px',
                 padding: '8px',
-                backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.04)',
+                backgroundColor: theme.palette.mode === 'dark' ? '#000' : '#fff',
+                boxShadow:
+                  theme.palette.mode === 'dark'
+                    ? '0 6px 18px rgba(0, 0, 0, 0.55), 0 2px 6px rgba(0, 0, 0, 0.35)'
+                    : '0 6px 18px rgba(0, 0, 0, 0.16), 0 2px 6px rgba(0, 0, 0, 0.1)',
+                ...(pureHomeModeOnHome
+                  ? {
+                      position: 'fixed',
+                      top: 16,
+                      right: 24,
+                      zIndex: theme.zIndex.drawer + 3
+                    }
+                  : {}),
                 '&:hover': {
-                  backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)'
+                  backgroundColor: theme.palette.mode === 'dark' ? '#111' : '#f8f9fa'
                 }
               }}
             >
@@ -254,6 +499,11 @@ const Header = () => {
                     }}
                     onClick={handleCloseMenu}
                   >
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1, py: 1.5 }}>
+                      <NoticeButton />
+                      <ThemeButton />
+                    </Box>
+                    <Divider sx={{ my: 1 }} />
                     <ListItemButton component={Link} to="/" selected={pathname === '/'}>
                       <ListItemText
                         primary={
