@@ -43,7 +43,10 @@ func tokenFingerprint(token string) string {
 }
 
 func getWeChatIdByCode(code string) (string, error) {
-	trimmedToken := strings.TrimSpace(config.WeChatServerToken)
+	trimmedToken := strings.TrimSpace(config.WeChatBridgeAPIToken)
+	if trimmedToken == "" {
+		trimmedToken = strings.TrimSpace(config.WeChatServerToken)
+	}
 	trimmedAddress := strings.TrimRight(strings.TrimSpace(config.WeChatServerAddress), "/")
 	requestURL := fmt.Sprintf("%s/api/wechat/user?code=%s&Authorization=%s", trimmedAddress, url.QueryEscape(code), url.QueryEscape(trimmedToken))
 	parsedURL, _ := url.Parse(requestURL)

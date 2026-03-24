@@ -76,6 +76,7 @@ func InitOptionMap() {
 
 	config.GlobalOption.RegisterString("WeChatServerAddress", &config.WeChatServerAddress)
 	config.GlobalOption.RegisterString("WeChatServerToken", &config.WeChatServerToken)
+	config.GlobalOption.RegisterString("WeChatBridgeAPIToken", &config.WeChatBridgeAPIToken)
 	config.GlobalOption.RegisterString("WeChatAccountQRCodeImageURL", &config.WeChatAccountQRCodeImageURL)
 	config.GlobalOption.RegisterString("WeChatScanBaseURL", &config.WeChatScanBaseURL)
 	config.GlobalOption.RegisterString("TurnstileSiteKey", &config.TurnstileSiteKey)

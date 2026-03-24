@@ -1161,7 +1161,9 @@
         "accessTokenPlaceholder": "敏感信息不會發送到前端顯示",
         "qrCodeImage": "微信公眾號二維碼圖片鏈接",
         "qrCodeImagePlaceholder": "輸入一個圖片鏈接",
-        "saveButton": "保存微信驗證碼登錄設置"
+        "saveButton": "保存微信驗證碼登錄設置",
+        "bridgeToken": "WeChat Server 訪問憑證",
+        "bridgeTokenPlaceholder": "敏感信息不會發送到前端顯示"
       },
       "configureWeChatScanLogin": {
         "title": "配置微信掃碼登錄",
@@ -1174,7 +1176,9 @@
         "accessTokenPlaceholder": "敏感信息不會發送到前端顯示",
         "scanBaseUrl": "微信掃碼頁 Base URL（demo 方式）",
         "scanBaseUrlPlaceholder": "例如：http://localhost:3000",
-        "saveButton": "保存微信掃碼登錄設置"
+        "saveButton": "保存微信掃碼登錄設置",
+        "bridgeToken": "WeChat Server 訪問憑證",
+        "bridgeTokenPlaceholder": "敏感信息不會發送到前端顯示"
       },
       "generalSettings": {
         "serverAddress": "伺服器地址",

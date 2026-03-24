@@ -1159,7 +1159,9 @@
         "accessTokenPlaceholder": "敏感情報はフロントエンドに送信されません",
         "qrCodeImage": "WeChat 公式アカウント QR コード画像リンク",
         "qrCodeImagePlaceholder": "画像リンクを入力してください",
-        "saveButton": "WeChat認証コードログイン設定を保存"
+        "saveButton": "WeChat認証コードログイン設定を保存",
+        "bridgeToken": "WeChat サーバーアクセス トークン",
+        "bridgeTokenPlaceholder": "敏感情報はフロントエンドに送信されません"
       },
       "configureWeChatScanLogin": {
         "title": "WeChatスキャンログインの設定",
@@ -1172,7 +1174,9 @@
         "accessTokenPlaceholder": "敏感情報はフロントエンドに送信されません",
         "scanBaseUrl": "WeChat スキャンページ Base URL（demo方式）",
         "scanBaseUrlPlaceholder": "例：http://localhost:3000",
-        "saveButton": "WeChatスキャンログイン設定を保存"
+        "saveButton": "WeChatスキャンログイン設定を保存",
+        "bridgeToken": "WeChat サーバーアクセス トークン",
+        "bridgeTokenPlaceholder": "敏感情報はフロントエンドに送信されません"
       },
       "generalSettings": {
         "serverAddress": "サーバーアドレス",

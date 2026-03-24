@@ -1176,7 +1176,9 @@
         "accessTokenPlaceholder": "Sensitive information will not be sent to the frontend",
         "qrCodeImage": "WeChat Official Account QR Code Image Link",
         "qrCodeImagePlaceholder": "Enter an image link",
-        "saveButton": "Save WeChat Code Login Settings"
+        "saveButton": "Save WeChat Code Login Settings",
+        "bridgeToken": "WeChat Server Access Token",
+        "bridgeTokenPlaceholder": "Sensitive information will not be sent to the frontend"
       },
       "configureWeChatScanLogin": {
         "title": "Configure WeChat Scan Login",
@@ -1189,7 +1191,9 @@
         "accessTokenPlaceholder": "Sensitive information will not be sent to the frontend",
         "scanBaseUrl": "WeChat scan page Base URL (demo mode)",
         "scanBaseUrlPlaceholder": "e.g. http://localhost:3000",
-        "saveButton": "Save WeChat Scan Login Settings"
+        "saveButton": "Save WeChat Scan Login Settings",
+        "bridgeToken": "WeChat Server Access Token",
+        "bridgeTokenPlaceholder": "Sensitive information will not be sent to the frontend"
       },
       "generalSettings": {
         "serverAddress": "Server Address",

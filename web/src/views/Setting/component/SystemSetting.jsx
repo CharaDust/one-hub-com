@@ -56,6 +56,7 @@ const SystemSetting = () => {
     WeChatScanAuthEnabled: '',
     WeChatServerAddress: '',
     WeChatServerToken: '',
+    WeChatBridgeAPIToken: '',
     WeChatAccountQRCodeImageURL: '',
     WeChatScanBaseURL: '',
     TurnstileCheckEnabled: '',
@@ -170,6 +171,7 @@ const SystemSetting = () => {
       name === 'OIDCUsernameClaims' ||
       name === 'WeChatServerAddress' ||
       name === 'WeChatServerToken' ||
+      name === 'WeChatBridgeAPIToken' ||
       name === 'WeChatAccountQRCodeImageURL' ||
       name === 'WeChatScanBaseURL' ||
       name === 'TurnstileSiteKey' ||
@@ -221,6 +223,9 @@ const SystemSetting = () => {
     if (originInputs['WeChatServerToken'] !== inputs.WeChatServerToken && inputs.WeChatServerToken !== '') {
       await updateOption('WeChatServerToken', inputs.WeChatServerToken);
     }
+    if (originInputs['WeChatBridgeAPIToken'] !== inputs.WeChatBridgeAPIToken && inputs.WeChatBridgeAPIToken !== '') {
+      await updateOption('WeChatBridgeAPIToken', inputs.WeChatBridgeAPIToken);
+    }
   };
 
   const submitWeChatScan = async () => {
@@ -232,6 +237,9 @@ const SystemSetting = () => {
     }
     if (originInputs['WeChatServerToken'] !== inputs.WeChatServerToken && inputs.WeChatServerToken !== '') {
       await updateOption('WeChatServerToken', inputs.WeChatServerToken);
+    }
+    if (originInputs['WeChatBridgeAPIToken'] !== inputs.WeChatBridgeAPIToken && inputs.WeChatBridgeAPIToken !== '') {
+      await updateOption('WeChatBridgeAPIToken', inputs.WeChatBridgeAPIToken);
     }
   };
 
@@ -647,14 +655,14 @@ const SystemSetting = () => {
             </Grid>
             <Grid xs={12} md={4}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="WeChatServerToken">{t('setting_index.systemSettings.configureWeChatCodeLogin.accessToken')}</InputLabel>
+                <InputLabel htmlFor="WeChatBridgeAPIToken">{t('setting_index.systemSettings.configureWeChatCodeLogin.bridgeToken')}</InputLabel>
                 <OutlinedInput
-                  id="WeChatServerToken"
-                  name="WeChatServerToken"
-                  value={inputs.WeChatServerToken || ''}
+                  id="WeChatBridgeAPIToken"
+                  name="WeChatBridgeAPIToken"
+                  value={inputs.WeChatBridgeAPIToken || ''}
                   onChange={handleInputChange}
-                  label={t('setting_index.systemSettings.configureWeChatCodeLogin.accessToken')}
-                  placeholder={t('setting_index.systemSettings.configureWeChatCodeLogin.accessTokenPlaceholder')}
+                  label={t('setting_index.systemSettings.configureWeChatCodeLogin.bridgeToken')}
+                  placeholder={t('setting_index.systemSettings.configureWeChatCodeLogin.bridgeTokenPlaceholder')}
                   disabled={loading}
                 />
               </FormControl>
@@ -714,14 +722,14 @@ const SystemSetting = () => {
             </Grid>
             <Grid xs={12} md={4}>
               <FormControl fullWidth>
-                <InputLabel htmlFor="WeChatServerToken">{t('setting_index.systemSettings.configureWeChatScanLogin.accessToken')}</InputLabel>
+                <InputLabel htmlFor="WeChatBridgeAPITokenScan">{t('setting_index.systemSettings.configureWeChatScanLogin.bridgeToken')}</InputLabel>
                 <OutlinedInput
-                  id="WeChatServerToken"
-                  name="WeChatServerToken"
-                  value={inputs.WeChatServerToken || ''}
+                  id="WeChatBridgeAPITokenScan"
+                  name="WeChatBridgeAPIToken"
+                  value={inputs.WeChatBridgeAPIToken || ''}
                   onChange={handleInputChange}
-                  label={t('setting_index.systemSettings.configureWeChatScanLogin.accessToken')}
-                  placeholder={t('setting_index.systemSettings.configureWeChatScanLogin.accessTokenPlaceholder')}
+                  label={t('setting_index.systemSettings.configureWeChatScanLogin.bridgeToken')}
+                  placeholder={t('setting_index.systemSettings.configureWeChatScanLogin.bridgeTokenPlaceholder')}
                   disabled={loading}
                 />
               </FormControl>
