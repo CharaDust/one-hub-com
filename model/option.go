@@ -31,6 +31,8 @@ func InitOptionMap() {
 	config.GlobalOption.RegisterBool("EmailVerificationEnabled", &config.EmailVerificationEnabled)
 	config.GlobalOption.RegisterBool("GitHubOAuthEnabled", &config.GitHubOAuthEnabled)
 	config.GlobalOption.RegisterBool("WeChatAuthEnabled", &config.WeChatAuthEnabled)
+	config.GlobalOption.RegisterBool("WeChatCodeAuthEnabled", &config.WeChatCodeAuthEnabled)
+	config.GlobalOption.RegisterBool("WeChatScanAuthEnabled", &config.WeChatScanAuthEnabled)
 	config.GlobalOption.RegisterBool("LarkAuthEnabled", &config.LarkAuthEnabled)
 	config.GlobalOption.RegisterBool("OIDCAuthEnabled", &config.OIDCAuthEnabled)
 	config.GlobalOption.RegisterBool("TurnstileCheckEnabled", &config.TurnstileCheckEnabled)
@@ -74,7 +76,9 @@ func InitOptionMap() {
 
 	config.GlobalOption.RegisterString("WeChatServerAddress", &config.WeChatServerAddress)
 	config.GlobalOption.RegisterString("WeChatServerToken", &config.WeChatServerToken)
+	config.GlobalOption.RegisterString("WeChatBridgeAPIToken", &config.WeChatBridgeAPIToken)
 	config.GlobalOption.RegisterString("WeChatAccountQRCodeImageURL", &config.WeChatAccountQRCodeImageURL)
+	config.GlobalOption.RegisterString("WeChatScanBaseURL", &config.WeChatScanBaseURL)
 	config.GlobalOption.RegisterString("TurnstileSiteKey", &config.TurnstileSiteKey)
 	config.GlobalOption.RegisterString("TurnstileSecretKey", &config.TurnstileSecretKey)
 	config.GlobalOption.RegisterInt("QuotaForNewUser", &config.QuotaForNewUser)

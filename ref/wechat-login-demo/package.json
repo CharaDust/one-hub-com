@@ -1,0 +1,10 @@
+{
+  "name": "wechat-login-demo",
+  "private": true,
+  "scripts": {
+    "start": "serve -l 8080"
+  },
+  "devDependencies": {
+    "serve": "^14.2.0"
+  }
+}

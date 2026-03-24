@@ -48,15 +48,27 @@ const PayDialog = ({ open, onClose, amount, uuid }) => {
   }, []);
 
   function openPayUrl(method, url, params, openInNewTab = false) {
+    const normalizedMethod = (method || 'GET').toUpperCase();
+    // GET 直接跳转，避免收银台 URL 查询参数（如 mnt/mot）在 form 流程中丢失。
+    if (normalizedMethod === 'GET') {
+      if (openInNewTab) {
+        window.open(url, '_blank');
+      } else {
+        window.location.href = url;
+      }
+      return;
+    }
+
     const form = document.createElement('form');
-    form.method = method;
+    form.method = normalizedMethod;
     form.action = url;
     // 当前窗口跳转避免被浏览器当作弹窗拦截（尤其从外链带参打开时无用户手势，新标签易被拦截）
     form.target = openInNewTab ? '_blank' : '_self';
-    for (const key in params) {
+    const formParams = params || {};
+    for (const key in formParams) {
       const input = document.createElement('input');
       input.name = key;
-      input.value = params[key];
+      input.value = formParams[key];
       form.appendChild(input);
     }
     document.body.appendChild(form);

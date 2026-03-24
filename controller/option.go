@@ -76,13 +76,35 @@ func UpdateOption(c *gin.Context) {
 			return
 		}
 	case "WeChatAuthEnabled":
-		if option.Value == "true" && config.WeChatServerAddress == "" {
+		wechatTokenReady := strings.TrimSpace(config.WeChatBridgeAPIToken) != "" || strings.TrimSpace(config.WeChatServerToken) != ""
+		if option.Value == "true" && (config.WeChatServerAddress == "" || !wechatTokenReady) {
 			c.JSON(http.StatusOK, gin.H{
 				"success": false,
-				"message": "无法启用微信登录，请先填入微信登录相关配置信息！",
+				"message": "无法启用微信登录，请先填入 WeChat Server 地址与访问凭证！",
 			})
 			return
 		}
+	case "WeChatCodeAuthEnabled":
+		wechatTokenReady := strings.TrimSpace(config.WeChatBridgeAPIToken) != "" || strings.TrimSpace(config.WeChatServerToken) != ""
+		if option.Value == "true" && (config.WeChatServerAddress == "" || !wechatTokenReady) {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": "无法启用微信验证码登录，请先填入 WeChat Server 地址与访问凭证！",
+			})
+			return
+		}
+	case "WeChatScanAuthEnabled":
+		wechatTokenReady := strings.TrimSpace(config.WeChatBridgeAPIToken) != "" || strings.TrimSpace(config.WeChatServerToken) != ""
+		if option.Value == "true" && (config.WeChatServerAddress == "" || !wechatTokenReady || config.WeChatScanBaseURL == "") {
+			c.JSON(http.StatusOK, gin.H{
+				"success": false,
+				"message": "无法启用微信扫码登录，请先填入 WeChat Server 地址、访问凭证与扫码页 Base URL！",
+			})
+			return
+		}
+	case "WeChatScanBaseURL":
+		// wechat_scan_base 允许为空：为空则前端回退到「静态二维码 + 验证码」方式
+		// 这里不做强制校验
 	case "TurnstileCheckEnabled":
 		if option.Value == "true" && config.TurnstileSiteKey == "" {
 			c.JSON(http.StatusOK, gin.H{

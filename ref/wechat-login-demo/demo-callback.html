@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登录回调</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 24px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f0f9eb;
+      color: #333;
+    }
+    .box { text-align: center; }
+    .msg { font-size: 16px; color: #07c160; margin-top: 8px; }
+    .err { color: #ee0a24; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <p id="status">处理中…</p>
+    <p class="msg" id="msg"></p>
+  </div>
+  <script>
+    (function () {
+      var LS_BASE = 'wechat_demo_base_url';
+      var LS_TOKEN = 'wechat_demo_api_token';
+      var MSG_TYPE = 'wechat-login-success';
+
+      var statusEl = document.getElementById('status');
+      var msgEl = document.getElementById('msg');
+
+      function setStatus(text, isError) {
+        statusEl.textContent = text;
+        msgEl.textContent = '';
+        msgEl.className = isError ? 'msg err' : 'msg';
+      }
+
+      function setMsg(text, isError) {
+        msgEl.textContent = text;
+        msgEl.className = isError ? 'msg err' : 'msg';
+      }
+
+      var params = new URLSearchParams(location.search);
+      var code = params.get('code');
+      if (!code) {
+        setStatus('未收到 code', true);
+        setMsg('请从 demo 页点击「登录」后扫码。', true);
+        return;
+      }
+
+      var baseUrl = localStorage.getItem(LS_BASE);
+      var apiToken = localStorage.getItem(LS_TOKEN);
+      if (!baseUrl || !apiToken) {
+        setStatus('配置缺失', true);
+        setMsg('请从 demo 页重新点击「登录」打开扫码页。', true);
+        return;
+      }
+
+      var url = baseUrl.replace(/\/$/, '') + '/api/wechat/user?code=' + encodeURIComponent(code);
+      fetch(url, {
+        method: 'GET',
+        headers: { 'Authorization': apiToken }
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          var openid = data.success && data.data ? data.data : null;
+          setStatus('登录成功，正在关闭…');
+          setMsg(openid ? 'openid: ' + openid : '');
+          try {
+            window.parent.postMessage({
+              type: MSG_TYPE,
+              code: code,
+              openid: openid || '',
+              rawResponse: data
+            }, document.location.origin);
+          } catch (e) {
+            setMsg('已获取 openid，请手动关闭弹框。', false);
+          }
+        })
+        .catch(function (err) {
+          setStatus('请求失败', true);
+          setMsg(err.message || '请检查 Base URL 与 API Token，并确认 wechat-sso-bridge 已启动。', true);
+        });
+    })();
+  </script>
+</body>
+</html>

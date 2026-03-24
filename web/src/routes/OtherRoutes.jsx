@@ -11,6 +11,7 @@ const AuthRegister = Loadable(lazy(() => import('views/Authentication/Auth/Regis
 const GitHubOAuth = Loadable(lazy(() => import('views/Authentication/Auth/GitHubOAuth')));
 const LarkOAuth = Loadable(lazy(() => import('views/Authentication/Auth/LarkOAuth')));
 const OIDCOAuth = Loadable(lazy(() => import('views/Authentication/Auth/OIDCOAuth')));
+const WechatCallback = Loadable(lazy(() => import('views/Authentication/Auth/WechatCallback')));
 const ForgetPassword = Loadable(lazy(() => import('views/Authentication/Auth/ForgetPassword')));
 const ResetPassword = Loadable(lazy(() => import('views/Authentication/Auth/ResetPassword')));
 const Home = Loadable(lazy(() => import('views/Home')));
@@ -73,6 +74,10 @@ const OtherRoutes = {
     {
       path: '/oauth/lark',
       element: <LarkOAuth />
+    },
+    {
+      path: '/auth/wechat-callback',
+      element: <WechatCallback />
     },
     {
       path: '/404',

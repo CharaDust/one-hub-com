@@ -47,23 +47,32 @@ const LoginForm = ({ ...others }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const { login, wechatLogin } = useLogin();
-  const [openWechat, setOpenWechat] = useState(false);
+  const [openWechatCode, setOpenWechatCode] = useState(false);
+  const [openWechatScan, setOpenWechatScan] = useState(false);
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const customization = useSelector((state) => state.customization);
   const siteInfo = useSelector((state) => state.siteInfo);
   // const [checked, setChecked] = useState(true);
 
   let tripartiteLogin = false;
-  if (siteInfo.github_oauth || siteInfo.wechat_login || siteInfo.lark_client_id || siteInfo.oidc_auth) {
+  if (siteInfo.github_oauth || siteInfo.wechat_login || siteInfo.wechat_code_login || siteInfo.wechat_scan_login || siteInfo.lark_client_id || siteInfo.oidc_auth) {
     tripartiteLogin = true;
   }
 
-  const handleWechatOpen = () => {
-    setOpenWechat(true);
+  const handleWechatCodeOpen = () => {
+    setOpenWechatCode(true);
   };
 
-  const handleWechatClose = () => {
-    setOpenWechat(false);
+  const handleWechatCodeClose = () => {
+    setOpenWechatCode(false);
+  };
+
+  const handleWechatScanOpen = () => {
+    setOpenWechatScan(true);
+  };
+
+  const handleWechatScanClose = () => {
+    setOpenWechatScan(false);
   };
 
   const [showPassword, setShowPassword] = useState(false);
@@ -100,13 +109,13 @@ const LoginForm = ({ ...others }) => {
               </AnimateButton>
             </Grid>
           )}
-          {siteInfo.wechat_login && (
+          {(siteInfo.wechat_code_login || siteInfo.wechat_login) && (
             <Grid item xs={12}>
               <AnimateButton>
                 <Button
                   disableElevation
                   fullWidth
-                  onClick={handleWechatOpen}
+                  onClick={handleWechatCodeOpen}
                   size="large"
                   variant="outlined"
                   sx={{
@@ -116,10 +125,46 @@ const LoginForm = ({ ...others }) => {
                   <Box sx={{ mr: { xs: 1, sm: 2, width: 20 }, display: 'flex', alignItems: 'center' }}>
                     <img src={Wechat} alt="Wechat" width={25} height={25} style={{ marginRight: matchDownSM ? 8 : 16 }} />
                   </Box>
-                  {t('login.useWechatLogin')}
+                  {t('login.useWechatCodeLogin')}
                 </Button>
               </AnimateButton>
-              <WechatModal open={openWechat} handleClose={handleWechatClose} wechatLogin={wechatLogin} qrCode={siteInfo.wechat_qrcode} />
+              <WechatModal
+                open={openWechatCode}
+                handleClose={handleWechatCodeClose}
+                wechatLogin={wechatLogin}
+                qrCode={siteInfo.wechat_qrcode}
+                wechatScanBase={siteInfo.wechat_scan_base}
+                mode="code"
+              />
+            </Grid>
+          )}
+          {siteInfo.wechat_scan_login && (
+            <Grid item xs={12}>
+              <AnimateButton>
+                <Button
+                  disableElevation
+                  fullWidth
+                  onClick={handleWechatScanOpen}
+                  size="large"
+                  variant="outlined"
+                  sx={{
+                    ...theme.typography.LoginButton
+                  }}
+                >
+                  <Box sx={{ mr: { xs: 1, sm: 2, width: 20 }, display: 'flex', alignItems: 'center' }}>
+                    <img src={Wechat} alt="Wechat" width={25} height={25} style={{ marginRight: matchDownSM ? 8 : 16 }} />
+                  </Box>
+                  {t('login.useWechatScanLogin')}
+                </Button>
+              </AnimateButton>
+              <WechatModal
+                open={openWechatScan}
+                handleClose={handleWechatScanClose}
+                wechatLogin={wechatLogin}
+                qrCode={siteInfo.wechat_qrcode}
+                wechatScanBase={siteInfo.wechat_scan_base}
+                mode="scan"
+              />
             </Grid>
           )}
           {siteInfo.lark_login && (

@@ -5,9 +5,11 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"one-api/common/config"
 	"one-api/model"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -20,14 +22,21 @@ type wechatLoginResponse struct {
 }
 
 func getWeChatIdByCode(code string) (string, error) {
+	trimmedToken := strings.TrimSpace(config.WeChatBridgeAPIToken)
+	if trimmedToken == "" {
+		trimmedToken = strings.TrimSpace(config.WeChatServerToken)
+	}
+	trimmedAddress := strings.TrimRight(strings.TrimSpace(config.WeChatServerAddress), "/")
+	requestURL := fmt.Sprintf("%s/api/wechat/user?code=%s&Authorization=%s", trimmedAddress, url.QueryEscape(code), url.QueryEscape(trimmedToken))
 	if code == "" {
 		return "", errors.New("无效的参数")
 	}
-	req, err := http.NewRequest("GET", fmt.Sprintf("%s/api/wechat/user?code=%s", config.WeChatServerAddress, code), nil)
+	req, err := http.NewRequest("GET", requestURL, nil)
 	if err != nil {
 		return "", err
 	}
-	req.Header.Set("Authorization", config.WeChatServerToken)
+	// 同时使用 Header 与 Query 传递 token，兼容某些代理丢失 Authorization 头的场景
+	req.Header.Set("Authorization", trimmedToken)
 	client := http.Client{
 		Timeout: 5 * time.Second,
 	}
@@ -51,9 +60,9 @@ func getWeChatIdByCode(code string) (string, error) {
 }
 
 func WeChatAuth(c *gin.Context) {
-	if !config.WeChatAuthEnabled {
+	if !config.WeChatAuthEnabled && !config.WeChatCodeAuthEnabled && !config.WeChatScanAuthEnabled {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "管理员未开启通过微信登录以及注册",
+			"message": "管理员未开启微信登录以及注册",
 			"success": false,
 		})
 		return
@@ -113,9 +122,9 @@ func WeChatAuth(c *gin.Context) {
 }
 
 func WeChatBind(c *gin.Context) {
-	if !config.WeChatAuthEnabled {
+	if !config.WeChatAuthEnabled && !config.WeChatCodeAuthEnabled && !config.WeChatScanAuthEnabled {
 		c.JSON(http.StatusOK, gin.H{
-			"message": "管理员未开启通过微信登录以及注册",
+			"message": "管理员未开启微信登录以及注册",
 			"success": false,
 		})
 		return

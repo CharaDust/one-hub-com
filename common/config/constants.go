@@ -41,6 +41,8 @@ var PasswordRegisterEnabled = true
 var EmailVerificationEnabled = false
 var GitHubOAuthEnabled = false
 var WeChatAuthEnabled = false
+var WeChatCodeAuthEnabled = false
+var WeChatScanAuthEnabled = false
 var LarkAuthEnabled = false
 var TurnstileCheckEnabled = false
 var RegisterEnabled = true
@@ -163,7 +165,11 @@ var LarkClientSecret = ""
 
 var WeChatServerAddress = ""
 var WeChatServerToken = ""
+var WeChatBridgeAPIToken = ""
 var WeChatAccountQRCodeImageURL = ""
+// WeChatScanBaseURL 用于「iframe 扫码页」方式（对接 wechat-sso-bridge / demo）的扫码页 base URL。
+// 例如：http://localhost:3000
+var WeChatScanBaseURL = ""
 
 var TurnstileSiteKey = ""
 var TurnstileSecretKey = ""

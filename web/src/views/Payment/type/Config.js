@@ -97,13 +97,23 @@ const PaymentConfig = {
       type: 'text',
       value: ''
     },
+    cashier_mnt: {
+      name: '收银台 mnt（可选）',
+      description:
+        'Web/聚合收银台（WEB_CASHIER、CHANNEL_CASHIER）统一下单 channelExtra 中的 mnt，默认同「商户号」。若计全提示「参数mnt必填」且与商户号不同，在此填写计全要求的值',
+      type: 'text',
+      value: ''
+    },
     way_code: {
       name: '支付方式',
-      description: '计全支付方式，见文档 https://docs.jeequan.com/docs/jeepay/payment_api',
+      description:
+        '计全支付方式。Web 统一收银台见指引 https://doc.jeequan.com/#/integrate/jqf/guide/267 与 https://docs.jeequan.com/docs/jeepay-open/jeepay-open-1e9j91jksjnh9',
       type: 'select',
       value: 'ALI_PC',
       options: [
+        { name: 'Web收银台(统一收银台)-WEB_CASHIER', value: 'WEB_CASHIER' },
         { name: '聚合二维码(用户扫商家,支持微信/支付宝/云闪付)', value: 'QR_CASHIER' },
+        { name: '聚合收银台-CHANNEL_CASHIER', value: 'CHANNEL_CASHIER' },
         { name: '支付宝PC网站-ALI_PC', value: 'ALI_PC' },
         { name: '支付宝WAP-ALI_WAP', value: 'ALI_WAP' },
         { name: '支付宝二维码-ALI_QR', value: 'ALI_QR' },
