@@ -1183,7 +1183,14 @@
         "serverAddress": "サーバーアドレス",
         "serverAddressPlaceholder": "例：https://yourdomain.com",
         "title": "システム設定",
-        "updateServerAddress": "サーバーアドレスを更新"
+        "updateServerAddress": "サーバーアドレスを更新",
+        "loginRedirectPath": "ログイン後の遷移先",
+        "saveLoginRedirectPath": "ログイン遷移設定を保存",
+        "loginRedirectPathOptions": {
+          "console": "コンソール",
+          "playground": "チャット",
+          "token": "トークン"
+        }
       },
       "title": "システム設定"
     }

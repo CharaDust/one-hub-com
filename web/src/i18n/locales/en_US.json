@@ -1200,7 +1200,14 @@
         "serverAddress": "Server Address",
         "serverAddressPlaceholder": "e.g., https://yourdomain.com",
         "title": "System Settings",
-        "updateServerAddress": "Update Server Address"
+        "updateServerAddress": "Update Server Address",
+        "loginRedirectPath": "Redirect users after login to",
+        "saveLoginRedirectPath": "Save Login Redirect",
+        "loginRedirectPathOptions": {
+          "console": "Console",
+          "playground": "Chat",
+          "token": "Token"
+        }
       },
       "title": "System Settings"
     }

@@ -1185,7 +1185,14 @@
         "serverAddress": "伺服器地址",
         "serverAddressPlaceholder": "例如：https://yourdomain.com",
         "title": "系統設置",
-        "updateServerAddress": "更新伺服器地址"
+        "updateServerAddress": "更新伺服器地址",
+        "loginRedirectPath": "登錄後用戶將跳轉至",
+        "saveLoginRedirectPath": "保存登錄跳轉設置",
+        "loginRedirectPathOptions": {
+          "console": "控制台",
+          "playground": "聊天",
+          "token": "令牌"
+        }
       },
       "title": "系統設置"
     }

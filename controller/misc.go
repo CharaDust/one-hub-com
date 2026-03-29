@@ -30,6 +30,7 @@ func GetStatus(c *gin.Context) {
 			"github_client_id":         config.GitHubClientId,
 			"oidc_auth":                config.OIDCAuthEnabled,
 			"webauthn_auth":            config.WebAuthnEnabled,
+			"login_redirect_path":      config.LoginRedirectPath,
 			"lark_login":               config.LarkAuthEnabled,
 			"lark_client_id":           config.LarkClientId,
 			"system_name":              config.SystemName,

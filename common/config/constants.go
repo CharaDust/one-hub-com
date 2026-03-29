@@ -50,6 +50,7 @@ var TurnstileCheckEnabled = false
 var RegisterEnabled = true
 var OIDCAuthEnabled = false
 var WebAuthnEnabled = true
+var LoginRedirectPath = "console"
 
 // 是否开启内容审查
 var EnableSafe = false

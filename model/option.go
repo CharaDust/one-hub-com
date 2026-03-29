@@ -76,6 +76,7 @@ func InitOptionMap() {
 	config.GlobalOption.RegisterString("OIDCIssuer", &config.OIDCIssuer)
 	config.GlobalOption.RegisterString("OIDCScopes", &config.OIDCScopes)
 	config.GlobalOption.RegisterString("OIDCUsernameClaims", &config.OIDCUsernameClaims)
+	config.GlobalOption.RegisterString("LoginRedirectPath", &config.LoginRedirectPath)
 
 	config.GlobalOption.RegisterString("WeChatServerAddress", &config.WeChatServerAddress)
 	config.GlobalOption.RegisterString("WeChatServerToken", &config.WeChatServerToken)

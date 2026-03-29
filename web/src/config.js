@@ -19,6 +19,7 @@ const config = {
     github_oauth: false,
     oidc_auth: false,
     webauthn_auth: true,
+    login_redirect_path: 'console',
     logo: '',
     quota_per_unit: 500000,
     server_address: '',
