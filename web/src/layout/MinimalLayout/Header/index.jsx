@@ -53,9 +53,12 @@ const Header = ({ pureHomeModeOnHome = false }) => {
         <IconButton
           onClick={handleOpenMenu}
           sx={{
+            width: 55,
+            height: 55,
+            minWidth: 55,
+            padding: 0,
             color: theme.palette.text.primary,
             borderRadius: '12px',
-            padding: '8px',
             backgroundColor: theme.palette.mode === 'dark' ? '#000' : '#fff',
             boxShadow:
               theme.palette.mode === 'dark'
@@ -306,9 +309,12 @@ const Header = ({ pureHomeModeOnHome = false }) => {
             <IconButton
               onClick={handleOpenMenu}
               sx={{
+                width: 60,
+                height: 60,
+                minWidth: 60,
+                padding: 0,
                 color: theme.palette.text.primary,
                 borderRadius: '12px',
-                padding: '8px',
                 backgroundColor: theme.palette.mode === 'dark' ? '#000' : '#fff',
                 boxShadow:
                   theme.palette.mode === 'dark'

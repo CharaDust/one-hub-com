@@ -1,10 +1,11 @@
 import { API, LoginCheckAPI } from 'utils/api';
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { LOGIN, SET_USER_GROUP } from 'store/actions';
+import { LOGIN, SET_SITE_INFO, SET_USER_GROUP } from 'store/actions';
 import { useNavigate } from 'react-router';
 import { showSuccess } from 'utils/common';
 import { useTranslation } from 'react-i18next';
+import { pathFromLoginRedirectSetting } from 'utils/loginRedirect';
 
 const useLogin = () => {
   const { t } = useTranslation();
@@ -12,17 +13,25 @@ const useLogin = () => {
   const navigate = useNavigate();
   const siteInfo = useSelector((state) => state.siteInfo);
 
-  const getLoginRedirectTarget = () => {
-    switch (siteInfo?.login_redirect_path) {
-      case 'playground':
-        return '/panel/playground';
-      case 'token':
-        return '/panel/token';
-      case 'console':
-      default:
-        return '/panel';
+  const navigateAfterLogin = useCallback(async () => {
+    try {
+      const res = await API.get('/api/status');
+      const data = res.data?.data;
+      if (data) {
+        if (!data.chat_link) {
+          delete data.chat_link;
+        }
+        localStorage.setItem('siteInfo', JSON.stringify(data));
+        dispatch({ type: SET_SITE_INFO, payload: data });
+        navigate(pathFromLoginRedirectSetting(data.login_redirect_path));
+      } else {
+        navigate(pathFromLoginRedirectSetting(siteInfo?.login_redirect_path));
+      }
+    } catch {
+      navigate(pathFromLoginRedirectSetting(siteInfo?.login_redirect_path));
     }
-  };
+  }, [dispatch, navigate, siteInfo?.login_redirect_path]);
+
   const login = async (username, password) => {
     try {
       const res = await API.post(`/api/user/login`, {
@@ -33,7 +42,7 @@ const useLogin = () => {
       if (success) {
         loadUser();
         loadUserGroup();
-        navigate(getLoginRedirectTarget());
+        await navigateAfterLogin();
       }
       return { success, message };
     } catch (err) {
@@ -50,12 +59,12 @@ const useLogin = () => {
       if (success) {
         if (message === 'bind') {
           showSuccess(t('common.bindOk'));
-          navigate(getLoginRedirectTarget());
+          await navigateAfterLogin();
         } else {
           loadUser();
           loadUserGroup();
           showSuccess(t('common.loginOk'));
-          navigate(getLoginRedirectTarget());
+          await navigateAfterLogin();
         }
       }
       return { success, message };
@@ -73,12 +82,12 @@ const useLogin = () => {
       if (success) {
         if (message === 'bind') {
           showSuccess(t('common.bindOk'));
-          navigate(getLoginRedirectTarget());
+          await navigateAfterLogin();
         } else {
           loadUser();
           loadUserGroup();
           showSuccess(t('common.loginOk'));
-          navigate(getLoginRedirectTarget());
+          await navigateAfterLogin();
         }
       }
       return { success, message };
@@ -96,11 +105,11 @@ const useLogin = () => {
       if (success) {
         if (message === 'bind') {
           showSuccess(t('common.bindOk'));
-          navigate(getLoginRedirectTarget());
+          await navigateAfterLogin();
         } else {
           loadUser();
           showSuccess(t('common.loginOk'));
-          navigate(getLoginRedirectTarget());
+          await navigateAfterLogin();
         }
       }
       return { success, message };
@@ -119,7 +128,7 @@ const useLogin = () => {
         loadUser();
         loadUserGroup();
         showSuccess(t('common.loginOk'));
-        navigate(getLoginRedirectTarget());
+        await navigateAfterLogin();
       }
       return { success, message };
     } catch (err) {
