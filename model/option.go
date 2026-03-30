@@ -94,6 +94,7 @@ func InitOptionMap() {
 	config.GlobalOption.RegisterString("TopUpLink", &config.TopUpLink)
 	config.GlobalOption.RegisterString("ChatLink", &config.ChatLink)
 	config.GlobalOption.RegisterString("ChatLinks", &config.ChatLinks)
+	config.GlobalOption.RegisterString("HomeMenuLinks", &config.HomeMenuLinks)
 	config.GlobalOption.RegisterFloat("QuotaPerUnit", &config.QuotaPerUnit)
 	config.GlobalOption.RegisterInt("RetryTimes", &config.RetryTimes)
 	config.GlobalOption.RegisterInt("RetryCooldownSeconds", &config.RetryCooldownSeconds)

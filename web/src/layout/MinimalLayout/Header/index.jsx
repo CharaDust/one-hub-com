@@ -39,6 +39,35 @@ const Header = ({ pureHomeModeOnHome = false }) => {
   const collapseToMenu = isMobile || pureHomeModeOnHome;
   const { t } = useTranslation();
   const siteInfo = useSelector((state) => state.siteInfo);
+
+  const getHomeMenuLinks = () => {
+    const fallback = [
+      { id: 'home', name: t('menu.home'), href: '/', show: true },
+      { id: 'playground', name: t('playground'), href: '/playground', show: true },
+      { id: 'price', name: t('price'), href: '/price', show: true },
+      { id: 'about', name: t('menu.about'), href: '/about', show: true }
+    ];
+    try {
+      const parsed = JSON.parse(siteInfo?.home_menu_links || '[]');
+      if (!Array.isArray(parsed) || parsed.length === 0) return fallback;
+      const withHome = parsed.some((x) => x?.id === 'home' || x?.href === '/')
+        ? parsed
+        : [{ id: 'home', name: t('menu.home'), href: '/', show: true }, ...parsed];
+      return withHome.map((x) => {
+        const isHome = x?.id === 'home' || x?.href === '/';
+        return {
+          id: isHome ? 'home' : x?.id,
+          name: isHome ? t('menu.home') : x?.name,
+          href: isHome ? '/' : x?.href,
+          show: isHome ? true : x?.show !== false
+        };
+      });
+    } catch {
+      return fallback;
+    }
+  };
+
+  const homeMenuLinks = getHomeMenuLinks();
   const handleOpenMenu = (event) => {
     setOpen(open ? null : event.currentTarget);
   };
@@ -134,75 +163,26 @@ const Header = ({ pureHomeModeOnHome = false }) => {
                         <ThemeButton />
                       </Box>
                       <Divider sx={{ my: 1 }} />
-                      <ListItemButton component={Link} to="/" selected={pathname === '/'}>
-                        <ListItemText
-                          primary={
-                            <Typography
-                              variant="body1"
-                              sx={{
-                                fontWeight: pathname === '/' ? 500 : 400,
-                                textAlign: 'center',
-                                color: pathname === '/' ? theme.palette.primary.main : theme.palette.text.primary
-                              }}
-                            >
-                              {t('menu.home')}
-                            </Typography>
-                          }
-                        />
-                      </ListItemButton>
-
-                      {account.user && (
-                        <ListItemButton component={Link} to="/playground" selected={pathname === '/playground'}>
-                          <ListItemText
-                            primary={
-                              <Typography
-                                variant="body1"
-                                sx={{
-                                  fontWeight: pathname === '/playground' ? 500 : 400,
-                                  textAlign: 'center',
-                                  color: pathname === '/playground' ? theme.palette.primary.main : theme.palette.text.primary
-                                }}
-                              >
-                                {t('playground')}
-                              </Typography>
-                            }
-                          />
-                        </ListItemButton>
-                      )}
-
-                      <ListItemButton component={Link} to="/price" selected={pathname === '/price'}>
-                        <ListItemText
-                          primary={
-                            <Typography
-                              variant="body1"
-                              sx={{
-                                fontWeight: pathname === '/price' ? 500 : 400,
-                                textAlign: 'center',
-                                color: pathname === '/price' ? theme.palette.primary.main : theme.palette.text.primary
-                              }}
-                            >
-                              {t('price')}
-                            </Typography>
-                          }
-                        />
-                      </ListItemButton>
-
-                      <ListItemButton component={Link} to="/about" selected={pathname === '/about'}>
-                        <ListItemText
-                          primary={
-                            <Typography
-                              variant="body1"
-                              sx={{
-                                fontWeight: pathname === '/about' ? 500 : 400,
-                                textAlign: 'center',
-                                color: pathname === '/about' ? theme.palette.primary.main : theme.palette.text.primary
-                              }}
-                            >
-                              {t('menu.about')}
-                            </Typography>
-                          }
-                        />
-                      </ListItemButton>
+                      {homeMenuLinks
+                        .filter((x) => x?.show)
+                        .map((x) => (
+                          <ListItemButton key={x.id || x.href} component={Link} to={x.href} selected={pathname === x.href}>
+                            <ListItemText
+                              primary={
+                                <Typography
+                                  variant="body1"
+                                  sx={{
+                                    fontWeight: pathname === x.href ? 500 : 400,
+                                    textAlign: 'center',
+                                    color: pathname === x.href ? theme.palette.primary.main : theme.palette.text.primary
+                                  }}
+                                >
+                                  {x.name}
+                                </Typography>
+                              }
+                            />
+                          </ListItemButton>
+                        ))}
                       {siteInfo.UptimeEnabled && (
                         <ListItemButton component="a" href={siteInfo.UptimeDomain} target="_blank" rel="noopener noreferrer">
                           <ListItemText
@@ -338,60 +318,24 @@ const Header = ({ pureHomeModeOnHome = false }) => {
           </>
         ) : (
           <>
-            <Button
-              component={Link}
-              variant="text"
-              to="/"
-              color={pathname === '/' ? 'primary' : 'inherit'}
-              sx={{
-                fontSize: '0.875rem',
-                fontWeight: 500,
-                textTransform: 'none'
-              }}
-            >
-              {t('menu.home')}
-            </Button>
-            {account.user && (
-              <Button
-                component={Link}
-                variant="text"
-                to="/playground"
-                color={pathname === '/playground' ? 'primary' : 'inherit'}
-                sx={{
-                  fontSize: '0.875rem',
-                  fontWeight: 500,
-                  textTransform: 'none'
-                }}
-              >
-                {t('playground')}
-              </Button>
-            )}
-            <Button
-              component={Link}
-              variant="text"
-              to="/price"
-              color={pathname === '/price' ? 'primary' : 'inherit'}
-              sx={{
-                fontSize: '0.875rem',
-                fontWeight: 500,
-                textTransform: 'none'
-              }}
-            >
-              {t('price')}
-            </Button>
-            <Button
-              component={Link}
-              variant="text"
-              to="/about"
-              color={pathname === '/about' ? 'primary' : 'inherit'}
-              sx={{
-                fontSize: '0.875rem',
-                fontWeight: 500,
-                textTransform: 'none'
-              }}
-            >
-              {t('menu.about')}
-            </Button>
+            {homeMenuLinks
+              .filter((x) => x?.show)
+              .map((x) => (
+                <Button
+                  key={x.id || x.href}
+                  component={Link}
+                  variant="text"
+                  to={x.href}
+                  color={pathname === x.href ? 'primary' : 'inherit'}
+                  sx={{
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    textTransform: 'none'
+                  }}
+                >
+                  {x.name}
+                </Button>
+              ))}
             {siteInfo.UptimeEnabled && (
               <Button
                 component="a"
@@ -510,75 +454,26 @@ const Header = ({ pureHomeModeOnHome = false }) => {
                       <ThemeButton />
                     </Box>
                     <Divider sx={{ my: 1 }} />
-                    <ListItemButton component={Link} to="/" selected={pathname === '/'}>
-                      <ListItemText
-                        primary={
-                          <Typography
-                            variant="body1"
-                            sx={{
-                              fontWeight: pathname === '/' ? 500 : 400,
-                              textAlign: 'center',
-                              color: pathname === '/' ? theme.palette.primary.main : theme.palette.text.primary
-                            }}
-                          >
-                            {t('menu.home')}
-                          </Typography>
-                        }
-                      />
-                    </ListItemButton>
-
-                    {account.user && (
-                      <ListItemButton component={Link} to="/playground" selected={pathname === '/playground'}>
-                        <ListItemText
-                          primary={
-                            <Typography
-                              variant="body1"
-                              sx={{
-                                fontWeight: pathname === '/playground' ? 500 : 400,
-                                textAlign: 'center',
-                                color: pathname === '/playground' ? theme.palette.primary.main : theme.palette.text.primary
-                              }}
-                            >
-                              {t('playground')}
-                            </Typography>
-                          }
-                        />
-                      </ListItemButton>
-                    )}
-
-                    <ListItemButton component={Link} to="/price" selected={pathname === '/price'}>
-                      <ListItemText
-                        primary={
-                          <Typography
-                            variant="body1"
-                            sx={{
-                              fontWeight: pathname === '/price' ? 500 : 400,
-                              textAlign: 'center',
-                              color: pathname === '/price' ? theme.palette.primary.main : theme.palette.text.primary
-                            }}
-                          >
-                            {t('price')}
-                          </Typography>
-                        }
-                      />
-                    </ListItemButton>
-
-                    <ListItemButton component={Link} to="/about" selected={pathname === '/about'}>
-                      <ListItemText
-                        primary={
-                          <Typography
-                            variant="body1"
-                            sx={{
-                              fontWeight: pathname === '/about' ? 500 : 400,
-                              textAlign: 'center',
-                              color: pathname === '/about' ? theme.palette.primary.main : theme.palette.text.primary
-                            }}
-                          >
-                            {t('menu.about')}
-                          </Typography>
-                        }
-                      />
-                    </ListItemButton>
+                    {homeMenuLinks
+                      .filter((x) => x?.show)
+                      .map((x) => (
+                        <ListItemButton key={x.id || x.href} component={Link} to={x.href} selected={pathname === x.href}>
+                          <ListItemText
+                            primary={
+                              <Typography
+                                variant="body1"
+                                sx={{
+                                  fontWeight: pathname === x.href ? 500 : 400,
+                                  textAlign: 'center',
+                                  color: pathname === x.href ? theme.palette.primary.main : theme.palette.text.primary
+                                }}
+                              >
+                                {x.name}
+                              </Typography>
+                            }
+                          />
+                        </ListItemButton>
+                      ))}
                     {siteInfo.UptimeEnabled && (
                       <ListItemButton
                         component="a"

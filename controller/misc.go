@@ -55,6 +55,7 @@ func GetStatus(c *gin.Context) {
 			"telegram_bot":             telegramBot,
 			"mj_notify_enabled":        config.MjNotifyEnabled,
 			"chat_links":               config.ChatLinks,
+			"home_menu_links":          config.HomeMenuLinks,
 			"PaymentUSDRate":           config.PaymentUSDRate,
 			"PaymentMinAmount":         config.PaymentMinAmount,
 			"RechargeDiscount":         config.RechargeDiscount,

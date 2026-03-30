@@ -23,6 +23,7 @@ import { API } from 'utils/api';
 import { marked } from 'marked';
 import { LoadStatusContext } from 'contexts/StatusContext';
 import { useTranslation } from 'react-i18next';
+import HomeMenuLinksDataGrid from './HomeMenuLinksDataGrid';
 
 const OtherSetting = () => {
   const { t } = useTranslation();
@@ -33,6 +34,16 @@ const OtherSetting = () => {
     SystemName: '',
     Logo: '',
     HomePageContent: '',
+    HomeMenuLinks: JSON.stringify(
+      [
+        { id: 'home', name: '首页', href: '/', show: true },
+        { id: 'playground', name: '聊天', href: '/playground', show: true },
+        { id: 'price', name: '价格', href: '/price', show: true },
+        { id: 'about', name: '关于', href: '/about', show: true }
+      ],
+      null,
+      2
+    ),
     AnalyticsCode: '',
     PureHomeMode: false,
     DisableDarkModeToggle: false
@@ -130,6 +141,21 @@ const OtherSetting = () => {
 
   const submitOption = async (key) => {
     await updateOption(key, inputs[key]);
+  };
+
+  const submitHomeMenuLinks = async () => {
+    // 基础校验：必须是 JSON 数组
+    try {
+      const parsed = JSON.parse(inputs.HomeMenuLinks || '[]');
+      if (!Array.isArray(parsed)) {
+        showError('主页菜单配置必须是 JSON 数组');
+        return;
+      }
+    } catch {
+      showError('主页菜单配置不是合法 JSON');
+      return;
+    }
+    await updateOption('HomeMenuLinks', inputs.HomeMenuLinks);
   };
 
   const openGitHubRelease = () => {
@@ -268,6 +294,22 @@ const OtherSetting = () => {
             <Grid xs={12}>
               <Button variant="contained" onClick={() => submitOption('HomePageContent')}>
                 {t('setting_index.otherSettings.customSettings.saveHomePageContent')}
+              </Button>
+            </Grid>
+            <Grid xs={12}>
+              <Typography variant="h6" gutterBottom>
+                主页菜单（通知按钮与控制台按钮之间）
+              </Typography>
+              <Alert severity="info">
+                默认有 4 个：首页（不可删除且不可隐藏）、聊天、价格、关于。支持增删改、上下移动、控制是否显示。
+              </Alert>
+            </Grid>
+            <Grid xs={12}>
+              <HomeMenuLinksDataGrid links={inputs.HomeMenuLinks || '[]'} onChange={handleInputChange} />
+            </Grid>
+            <Grid xs={12}>
+              <Button variant="contained" onClick={submitHomeMenuLinks}>
+                保存主页菜单设置
               </Button>
             </Grid>
             <Grid xs={12}>

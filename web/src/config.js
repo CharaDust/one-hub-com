@@ -20,6 +20,16 @@ const config = {
     oidc_auth: false,
     webauthn_auth: true,
     login_redirect_path: 'console',
+    home_menu_links: JSON.stringify(
+      [
+        { id: 'home', name: '首页', href: '/', show: true },
+        { id: 'playground', name: '聊天', href: '/playground', show: true },
+        { id: 'price', name: '价格', href: '/price', show: true },
+        { id: 'about', name: '关于', href: '/about', show: true }
+      ],
+      null,
+      2
+    ),
     logo: '',
     quota_per_unit: 500000,
     server_address: '',
