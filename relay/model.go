@@ -25,6 +25,10 @@ type OpenAIModels struct {
 	Object  string  `json:"object"`
 	Created int     `json:"created"`
 	OwnedBy *string `json:"owned_by"`
+	// 对外工具拉取模型列表时使用的单价展示：
+	// - 若 Input/Output 不一致，则以 Output 为准
+	// - 否则回退到 Input（或 Output 为 0 时）
+	Price float64 `json:"price,omitempty"`
 }
 
 func ListModelsByToken(c *gin.Context) {
@@ -211,7 +215,26 @@ func getOpenAIModelWithName(modelName string) *OpenAIModels {
 		Object:  "model",
 		Created: 1677649963,
 		OwnedBy: getModelOwnedBy(price.ChannelType),
+		Price:   resolveModelListPrice(price),
 	}
+}
+
+func resolveModelListPrice(p *model.Price) float64 {
+	if p == nil {
+		return 0
+	}
+	// 若输入与输出不一样，则以输出价格为准
+	if p.Output > 0 && p.Output != p.Input {
+		return p.Output
+	}
+	// 否则优先取输出（当两者相等时两者皆可），再回退到输入
+	if p.Output > 0 {
+		return p.Output
+	}
+	if p.Input > 0 {
+		return p.Input
+	}
+	return 0
 }
 
 func GetModelOwnedBy(c *gin.Context) {

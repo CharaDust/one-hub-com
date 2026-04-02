@@ -82,9 +82,9 @@ const Header = ({ pureHomeModeOnHome = false }) => {
         <IconButton
           onClick={handleOpenMenu}
           sx={{
-            width: 55,
-            height: 55,
-            minWidth: 55,
+            width: 40,
+            height: 40,
+            minWidth: 40,
             padding: 0,
             color: theme.palette.text.primary,
             borderRadius: '12px',
