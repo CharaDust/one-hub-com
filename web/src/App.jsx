@@ -31,6 +31,19 @@ const App = () => {
   const customization = useSelector((state) => state.customization);
 
   useEffect(() => {
+    const cachedSiteInfo = localStorage.getItem('siteInfo');
+    if (cachedSiteInfo) {
+      try {
+        const parsedSiteInfo = JSON.parse(cachedSiteInfo);
+        if (parsedSiteInfo?.disable_dark_mode_toggle) {
+          dispatch({ type: SET_THEME, theme: 'light' });
+          localStorage.setItem('theme', 'light');
+          return;
+        }
+      } catch (error) {
+        // ignore parse failures
+      }
+    }
     const storedTheme = localStorage.getItem('theme');
     if (storedTheme) {
       dispatch({ type: SET_THEME, theme: storedTheme });

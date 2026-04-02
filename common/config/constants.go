@@ -22,7 +22,15 @@ var Logo = ""
 var TopUpLink = ""
 var ChatLink = ""
 var ChatLinks = ""
+var HomeMenuLinks = `[
+  { "id": "home", "name": "首页", "href": "/", "show": true },
+  { "id": "playground", "name": "聊天", "href": "/playground", "show": true },
+  { "id": "price", "name": "价格", "href": "/price", "show": true },
+  { "id": "about", "name": "关于", "href": "/about", "show": true }
+]`
 var AnalyticsCode = ""
+var PureHomeMode = false
+var DisableDarkModeToggle = false
 var QuotaPerUnit = 500 * 1000.0 // Credit 0.002 / 1K tokens
 var DisplayInCurrencyEnabled = true
 
@@ -47,6 +55,8 @@ var LarkAuthEnabled = false
 var TurnstileCheckEnabled = false
 var RegisterEnabled = true
 var OIDCAuthEnabled = false
+var WebAuthnEnabled = true
+var LoginRedirectPath = "console"
 
 // 是否开启内容审查
 var EnableSafe = false
@@ -167,6 +177,7 @@ var WeChatServerAddress = ""
 var WeChatServerToken = ""
 var WeChatBridgeAPIToken = ""
 var WeChatAccountQRCodeImageURL = ""
+
 // WeChatScanBaseURL 用于「iframe 扫码页」方式（对接 wechat-sso-bridge / demo）的扫码页 base URL。
 // 例如：http://localhost:3000
 var WeChatScanBaseURL = ""
@@ -221,11 +232,11 @@ var GeminiAPIEnabled = true
 var ClaudeAPIEnabled = true
 
 const (
-	RoleGuestUser     = 0
-	RoleCommonUser    = 1
-	RoleReliableUser  = 3   // 可信的内部员工
-	RoleAdminUser     = 10
-	RoleRootUser      = 100
+	RoleGuestUser    = 0
+	RoleCommonUser   = 1
+	RoleReliableUser = 3 // 可信的内部员工
+	RoleAdminUser    = 10
+	RoleRootUser     = 100
 )
 
 var RateLimitKeyExpirationDuration = 20 * time.Minute

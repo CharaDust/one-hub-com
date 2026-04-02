@@ -15,7 +15,9 @@ import {
   Divider,
   Alert,
   Autocomplete,
-  TextField
+  TextField,
+  Select,
+  MenuItem
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { showError, showSuccess, removeTrailingSlash } from 'utils/common'; //,
@@ -39,6 +41,8 @@ const SystemSetting = () => {
     LarkClientId: '',
     LarkClientSecret: '',
     OIDCAuthEnabled: '',
+    WebAuthnEnabled: '',
+    LoginRedirectPath: 'console',
     OIDCClientId: '',
     OIDCClientSecret: '',
     OIDCIssuer: '',
@@ -114,6 +118,7 @@ const SystemSetting = () => {
       case 'WeChatScanAuthEnabled':
       case 'LarkAuthEnabled':
       case 'OIDCAuthEnabled':
+      case 'WebAuthnEnabled':
       case 'TurnstileCheckEnabled':
       case 'EmailDomainRestrictionEnabled':
       case 'RegisterEnabled':
@@ -178,7 +183,8 @@ const SystemSetting = () => {
       name === 'TurnstileSecretKey' ||
       name === 'EmailDomainWhitelist' ||
       name === 'LarkClientId' ||
-      name === 'LarkClientSecret'
+      name === 'LarkClientSecret' ||
+      name === 'LoginRedirectPath'
     ) {
       setInputs((inputs) => ({ ...inputs, [name]: value }));
     } else {
@@ -293,6 +299,10 @@ const SystemSetting = () => {
     }
   };
 
+  const submitLoginRedirectPath = async () => {
+    await updateOption('LoginRedirectPath', inputs.LoginRedirectPath || 'console');
+  };
+
   return (
     <>
       <Stack spacing={2}>
@@ -315,6 +325,30 @@ const SystemSetting = () => {
             <Grid xs={12}>
               <Button variant="contained" onClick={submitServerAddress}>
                 {t('setting_index.systemSettings.generalSettings.updateServerAddress')}
+              </Button>
+            </Grid>
+            <Grid xs={12} md={4}>
+              <FormControl fullWidth>
+                <InputLabel id="LoginRedirectPath-label">
+                  {t('setting_index.systemSettings.generalSettings.loginRedirectPath')}
+                </InputLabel>
+                <Select
+                  labelId="LoginRedirectPath-label"
+                  id="LoginRedirectPath"
+                  name="LoginRedirectPath"
+                  value={inputs.LoginRedirectPath || 'console'}
+                  label={t('setting_index.systemSettings.generalSettings.loginRedirectPath')}
+                  onChange={handleInputChange}
+                >
+                  <MenuItem value="console">{t('setting_index.systemSettings.generalSettings.loginRedirectPathOptions.console')}</MenuItem>
+                  <MenuItem value="playground">{t('setting_index.systemSettings.generalSettings.loginRedirectPathOptions.playground')}</MenuItem>
+                  <MenuItem value="token">{t('setting_index.systemSettings.generalSettings.loginRedirectPathOptions.token')}</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid xs={12}>
+              <Button variant="contained" onClick={submitLoginRedirectPath}>
+                {t('setting_index.systemSettings.generalSettings.saveLoginRedirectPath')}
               </Button>
             </Grid>
           </Grid>
@@ -386,6 +420,12 @@ const SystemSetting = () => {
               <FormControlLabel
                 label={t('setting_index.systemSettings.configureLoginRegister.oidcAuth')}
                 control={<Checkbox checked={inputs.OIDCAuthEnabled === 'true'} onChange={handleInputChange} name="OIDCAuthEnabled" />}
+              />
+            </Grid>
+            <Grid xs={12} md={3}>
+              <FormControlLabel
+                label={t('setting_index.systemSettings.configureLoginRegister.webAuthn')}
+                control={<Checkbox checked={inputs.WebAuthnEnabled === 'true'} onChange={handleInputChange} name="WebAuthnEnabled" />}
               />
             </Grid>
             <Grid xs={12} md={3}>

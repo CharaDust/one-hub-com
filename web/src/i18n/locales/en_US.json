@@ -1104,7 +1104,8 @@
         "title": "Configure Login and Register",
         "turnstileCheck": "Enable Turnstile User Verification",
         "weChatCodeAuth": "Allow Login & Register via WeChat verification code",
-        "weChatScanAuth": "Allow Login & Register via WeChat scan"
+        "weChatScanAuth": "Allow Login & Register via WeChat scan",
+        "webAuthn": "Allow Login via WebAuthn"
       },
       "configureOIDCAuthorization": {
         "alert1": "Fill in the homepage link",
@@ -1199,7 +1200,14 @@
         "serverAddress": "Server Address",
         "serverAddressPlaceholder": "e.g., https://yourdomain.com",
         "title": "System Settings",
-        "updateServerAddress": "Update Server Address"
+        "updateServerAddress": "Update Server Address",
+        "loginRedirectPath": "Redirect users after login to",
+        "saveLoginRedirectPath": "Save Login Redirect",
+        "loginRedirectPathOptions": {
+          "console": "Console",
+          "playground": "Chat",
+          "token": "Token"
+        }
       },
       "title": "System Settings"
     }

@@ -47,7 +47,7 @@
     "status": "状态",
     "login": "登录",
     "signup": "注册",
-    "signout": "注销",
+    "signout": "退出登录",
     "console": "控制台",
     "error": "错误",
     "unknownVersion": "未知版本",
@@ -952,7 +952,14 @@
         "title": "系统设置",
         "serverAddress": "服务器地址",
         "serverAddressPlaceholder": "例如：https://yourdomain.com",
-        "updateServerAddress": "更新服务器地址"
+        "updateServerAddress": "更新服务器地址",
+        "loginRedirectPath": "登录后用户将跳转至",
+        "saveLoginRedirectPath": "保存登录跳转设置",
+        "loginRedirectPathOptions": {
+          "console": "控制台",
+          "playground": "聊天",
+          "token": "令牌"
+        }
       },
       "configureLoginRegister": {
         "title": "配置登录和注册",
@@ -963,6 +970,7 @@
         "oidcAuth": "允许通过 OIDC 账户登录 & 注册",
         "weChatCodeAuth": "允许通过微信验证码登录 & 注册",
         "weChatScanAuth": "允许通过微信扫码登录 & 注册",
+        "webAuthn": "允许通过 WebAuthn 登录",
         "larkAuth": "允许通过飞书登录 & 注册",
         "registerEnabled": "允许新用户注册（此项为否时，新用户将无法以任何方式进行注册）",
         "turnstileCheck": "启用 Turnstile 用户校验",
@@ -1168,8 +1176,8 @@
     "passwordRest": "密码重置确认",
     "useGithubLogin": "使用 Github 登录",
     "useWechatLogin": "使用 Wechat 登录",
-    "useWechatCodeLogin": "使用 Wechat 验证码登录",
-    "useWechatScanLogin": "使用 Wechat 扫码登录",
+    "useWechatCodeLogin": "使用微信验证码登录",
+    "useWechatScanLogin": "使用微信验证码登录",
     "useOIDCLogin": "使用 OIDC 登录",
     "useLarkLogin": "使用飞书登录"
   },

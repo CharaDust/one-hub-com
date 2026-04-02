@@ -495,8 +495,8 @@
     "useLarkLogin": "使用飛書登錄",
     "useOIDCLogin": "使用 OIDC 登錄",
     "useWechatLogin": "使用 Wechat 登錄",
-    "useWechatCodeLogin": "使用 Wechat 驗證碼登錄",
-    "useWechatScanLogin": "使用 Wechat 掃碼登錄",
+    "useWechatCodeLogin": "使用 WeChat 驗證碼登錄",
+    "useWechatScanLogin": "使用 WeChat 驗證碼登錄",
     "usernameOrEmail": "用戶名/電郵",
     "usernameRequired": "用戶名/電郵為必填項",
     "wechatLoginInfo": "請使用微信掃描二維碼關注公眾號，輸入「驗證碼」獲取驗證碼（有效期三分鐘）",
@@ -1089,8 +1089,9 @@
         "registerEnabled": "允許新用戶註冊（此項為否時，新用戶將無法以任何方式進行註冊）",
         "title": "配置登錄和註冊",
         "turnstileCheck": "啟用 Turnstile 用戶校驗",
-        "weChatCodeAuth": "允許通過微信驗證碼登錄 & 註冊",
-        "weChatScanAuth": "允許通過微信掃碼登錄 & 註冊",
+        "weChatCodeAuth": "允許通過 WeChat 驗證碼登錄 & 註冊",
+        "weChatScanAuth": "允許通過 WeChat 掃碼登錄 & 註冊",
+        "webAuthn": "允許通過 WebAuthn 登錄",
         "gitHubOldIdClose": "關閉 GitHub 老 ID 登錄"
       },
       "configureOIDCAuthorization": {
@@ -1184,7 +1185,14 @@
         "serverAddress": "伺服器地址",
         "serverAddressPlaceholder": "例如：https://yourdomain.com",
         "title": "系統設置",
-        "updateServerAddress": "更新伺服器地址"
+        "updateServerAddress": "更新伺服器地址",
+        "loginRedirectPath": "登錄後用戶將跳轉至",
+        "saveLoginRedirectPath": "保存登錄跳轉設置",
+        "loginRedirectPathOptions": {
+          "console": "控制台",
+          "playground": "聊天",
+          "token": "令牌"
+        }
       },
       "title": "系統設置"
     }

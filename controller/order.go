@@ -199,6 +199,11 @@ func PaymentCallback(c *gin.Context) {
 	}
 
 	if order.Status != model.OrderStatusPending {
+		logger.SysLog(fmt.Sprintf("payment callback: order already processed, trade_no=%s, method=%s, status=%s", payNotify.TradeNo, c.Request.Method, order.Status))
+		// 计全通常会先发 POST 异步通知，再触发浏览器 GET 回跳；若订单已处理，GET 也应重定向到流水页。
+		if c.Request.Method == "GET" {
+			c.Redirect(http.StatusFound, "/panel/log")
+		}
 		return
 	}
 

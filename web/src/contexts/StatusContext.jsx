@@ -1,7 +1,7 @@
 import { useEffect, useCallback, createContext } from 'react';
 import { API } from 'utils/api';
 import { showNotice, showError } from 'utils/common';
-import { SET_SITE_INFO, SET_MODEL_OWNEDBY } from 'store/actions';
+import { SET_SITE_INFO, SET_MODEL_OWNEDBY, SET_THEME } from 'store/actions';
 import { useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import i18n from 'i18next';
@@ -30,6 +30,10 @@ const StatusProvider = ({ children }) => {
         localStorage.setItem('siteInfo', JSON.stringify(data));
         localStorage.setItem('quota_per_unit', data.quota_per_unit);
         localStorage.setItem('display_in_currency', data.display_in_currency);
+        if (data.disable_dark_mode_toggle) {
+          dispatch({ type: SET_THEME, theme: 'light' });
+          localStorage.setItem('theme', 'light');
+        }
         dispatch({ type: SET_SITE_INFO, payload: data });
         if (
           data.version !== import.meta.env.VITE_APP_VERSION &&

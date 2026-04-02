@@ -217,7 +217,8 @@ func parseNotifyParams(c *gin.Context) (map[string]string, error) {
 	if err := c.Request.ParseForm(); err != nil {
 		return nil, err
 	}
-	for k, v := range c.Request.PostForm {
+	// ParseForm 后使用 Form（而非 PostForm），可同时覆盖 GET query 与 POST form。
+	for k, v := range c.Request.Form {
 		if len(v) > 0 {
 			params[k] = v[0]
 		}
